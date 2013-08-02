@@ -1,10 +1,3 @@
-var sceneFactory = new SceneFactory();
+var sceneryFactory = new SceneryFactory();
 
-var cityScene = sceneFactory.createScene('resource/city/scene.js');
-
-// console.log(cityScene);
-
-// function loop(){
-//   cityScene.render();
-//   requestAnimFrame(loop);
-// }
+var cityScenery = sceneryFactory.createScenery('resource/city/scenery.js');

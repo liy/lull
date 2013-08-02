@@ -1,4 +1,4 @@
 function Editor(){
-  this.arenas = [];
+  this.acts = [];
 }
 var p = Editor.prototype;

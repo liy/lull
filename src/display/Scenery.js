@@ -1,7 +1,7 @@
-function Scene(){
-  this.name = "scene";
+function Scenery(){
+  this.name = "Scenery";
 }
-var p = Scene.prototype;
+var p = Scenery.prototype;
 
 p.load = function(){
 

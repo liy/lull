@@ -114,41 +114,41 @@ p.sync = function(){
     if(this.hasOwnProperty(key))
       continue;
 
-    // close the value of the key, and also needs to pass the scope as well.
-    (function(scope, key){
+    // close off the value of the key, and also needs to make sure the scope is pointed to the Mediator instance.
+    (function(key){
 
-      if(scope._model[key] instanceof Object){
-        var mediator = scope[key] = new Mediator(scope._model[key], scope);
+      if(this._model[key] instanceof Object){
+        var mediator = this[key] = new Mediator(this._model[key], this);
 
-        Object.defineProperty(scope, key, {
+        Object.defineProperty(this, key, {
           get: function(){
             return mediator;
           },
           set: function(value){
-            scope._model[key] = value;
+            this._model[key] = value;
 
-            scope.propagateEvent(new ModelEvent(ModelEvent.UPDATE));
+            this.propagateEvent(new ModelEvent(ModelEvent.UPDATE));
           },
           enumerable: true,
           configurable: true
         });
       }
       else{
-        Object.defineProperty(scope, key, {
+        Object.defineProperty(this, key, {
           get: function(){
-            return scope._model[key];
+            return this._model[key];
           },
           set: function(value){
-            scope._model[key] = value;
+            this._model[key] = value;
 
-            scope.propagateEvent(new ModelEvent(ModelEvent.UPDATE));
+            this.propagateEvent(new ModelEvent(ModelEvent.UPDATE));
           },
           enumerable: true,
           configurable: true
         });
       }
 
-    })(this, key);
+    }).call(this, key);
   }
 }
 

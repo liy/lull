@@ -104,7 +104,7 @@ function Mediator(model, parent){
 
   this.parent = parent;
 
-  this.sync(model);
+  this.sync();
 }
 var p = Mediator.prototype = Object.create(EventDispatcher.prototype);
 
@@ -171,13 +171,13 @@ p.propagateEvent = function(evt){
 
 var activityMediator = new Mediator(activity);
 
-activityMediator.addListener(ModelEvent.UPDATE, function(evt){
+activityMediator.scenes.addListener(ModelEvent.UPDATE, function(evt){
   console.log('updated');
 });
 
 
 console.log(activityMediator);
-activityMediator.scenes = [];
+activityMediator.title = 1;
 
 // console.log(activityMediator.scenes);
 // console.log(activityMediator.scenes);

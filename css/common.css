@@ -1,0 +1,6 @@
+.Scene {
+  width: 1024px;
+  height: 768px;
+  background-color: #CCC;
+  border: 5px solid black;
+}

@@ -3,7 +3,7 @@
 
 var activityModel = {
   title: "Day after day",
-  description: "This is a song from the ancient times",
+  description: "This is an activity from the ancient times",
   updated_at: "1992",
   created_at: "",
   totalScenes: 1,
@@ -62,3 +62,6 @@ mediator.addListener(ModelEvent.ADD, function(evt){
 mediator.scenes.get(0).name = 'City scene';
 // add a scene
 mediator.scenes.push({name:'Space scene', index:1});
+
+var view = new View(mediator)
+console.log(view);

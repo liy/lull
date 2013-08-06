@@ -1,7 +1,7 @@
 // // var loader = new ActivityLoader();
 // // loader.load('example/activity.json');
 
-var activity = {
+var activityModel = {
   title: "Day after day",
   description: "This is a song from the ancient times",
   updated_at: "1992",
@@ -9,6 +9,7 @@ var activity = {
   totalScenes: 1,
   scenes:[
     {
+      name:"Woods scene",
       index: 0,
       type: 0,
       scenery: {
@@ -40,17 +41,24 @@ var activity = {
       ]
     }
   ],
-  userInfo:{
+  creator:{
     name: 'liy'
   }
 }
 
+var mediator = new Mediator(activityModel)
 
-var mediator = new Mediator(activity)
 mediator.addListener(ModelEvent.UPDATE, function(evt){
+  console.log("updated: ");
   console.log(evt.target);
 });
 
-mediator.scenes.push({sceneName:'testing'});
-mediator.scenes.get(1).sceneName = 'Scene 2';
-console.log(mediator.scenes.get(1).sceneName);
+mediator.addListener(ModelEvent.ADD, function(evt){
+  console.log("added: ");
+  console.log(evt.target);
+});
+
+// update
+mediator.scenes.get(0).name = 'City scene';
+// add a scene
+mediator.scenes.push({name:'Space scene', index:1});

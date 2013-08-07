@@ -65,3 +65,5 @@ mediator.scenes.push({name:'Space scene', index:1});
 
 var view = new View(mediator)
 console.log(view);
+
+console.log("remote script executed !!!!!!!!!!");

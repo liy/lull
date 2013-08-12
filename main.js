@@ -23,10 +23,10 @@ var updateTime = getTickCount();
 var loops = 0;
 
 (function mainloop(){
-  stats.begin();
-
+  // reset loop count
+  loops = 0;
   // processing update
-  if(getTickCount() > updateTime && loops < CONFIG.MAX_FRAMES_SKIP){
+  while(getTickCount() > updateTime && loops < CONFIG.MAX_FRAMES_SKIP){
     // first update the physics collision detection
     //_physicsEngine->Update();
 
@@ -43,14 +43,11 @@ var loops = 0;
     updateTime += CONFIG.MS_PER_UPDATE;
     ++loops;
   }
-  else{
-    // render the whole thing, as much as possible. Do not care about duplicate frames rendering
-    canvasRenderer.render();
 
-    // reset loop count
-    loops = 0;
-  }
 
+  stats.begin();
+  // render as much as possible. Does not care about the duplicate frames rendering
+  canvasRenderer.render();
   stats.end();
 
   requestAnimFrame(mainloop)

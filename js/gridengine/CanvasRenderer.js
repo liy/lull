@@ -18,6 +18,8 @@ var p = CanvasRenderer.prototype = Object.create(Renderer.prototype);
 
 p.render = function(){
   Renderer.prototype.render.call(this);
+  
+  this.stage.update();
 
   // draw stage
   // reset to identity matrix transform

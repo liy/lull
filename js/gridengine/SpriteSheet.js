@@ -123,7 +123,7 @@ data = {
 }
 */
 p.load = function(data){
-			if(data == null)
+	if(data == null)
 		return;
 
 	var len;

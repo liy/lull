@@ -74,27 +74,21 @@ p.gotoAndStop = function(indexOrName){
 /*
 
 */
-p.draw = function(ctx){
+p.draw = function(renderer){
+	if(!this.visible)
+		return;
+
 	// update animation
 	this.updateAnimation();
 
-	// update matrix, getting ready for apply to the context.
-	this.updateMatrix();
-
-	// push the current matrix state to the stack
-	ctx.save();
-
-	ctx.globalAlpha *= this.alpha;
-
-	// 2d affine transform
-	ctx.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
+	renderer.predraw(this);
 
 	var frame = this.spriteSheet.getFrame(this.currentFrameIndex);
 	if(frame)
-		ctx.drawImage(frame.image, frame.rect.x, frame.rect.y, frame.rect.width, frame.rect.height, -frame.offsetX, -frame.offsetY, frame.rect.width, frame.rect.height);
+		renderer.draw(frame.image, frame.rect.x, frame.rect.y, frame.rect.width, frame.rect.height, -frame.offsetX, -frame.offsetY, frame.rect.width, frame.rect.height);
 
 	// pop the last saved matrix state, assign to the context.
-	ctx.restore();
+	renderer.postdraw(this);
 };
 
 /*

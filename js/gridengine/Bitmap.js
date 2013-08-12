@@ -9,9 +9,6 @@ function Bitmap(){
 }
 var p = Bitmap.prototype = Object.create(DisplayObject.prototype);
 
-/*
-
-*/
 p.load = function(imageOrURL){
 	// url
 	if(typeof imageOrURL === 'string'){
@@ -29,9 +26,6 @@ p.load = function(imageOrURL){
 	}
 };
 
-/*
-
-*/
 p.onload = function(){
 	console.log('bitmap loaded complete');
 	this._rect.width = this.image.width;
@@ -42,16 +36,13 @@ p.onload = function(){
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
 
-/*
-Draw the Bitmap onto Canvas2D context.
-*/
 p.draw = function(renderer){
 	if(!this.visible)
 		return;
 
-	renderer.preDraw(this);
-	renderer.draw(this);
-	renderer.postDraw(this);
+	renderer.predraw(this);
+	renderer.draw(this.image, 0, 0);
+	renderer.postdraw(this);
 };
 
 /*

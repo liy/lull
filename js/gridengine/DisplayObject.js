@@ -4,7 +4,7 @@
 function DisplayObject(){
 	Node.call(this);
 
-	this.stage = null;
+	this._stage = null;
 	this.visible = true;
 
 	this.parent = null;
@@ -22,7 +22,6 @@ function DisplayObject(){
 	// TODO: Axis-aligned bounding box, for speeding up the rendering and hit test
 	this._aabb = new AABB(this);
 
-	// The point representing the position of the GameObject
 	this._anchorX = 0;
 	this._anchorY = 0;
 
@@ -291,7 +290,7 @@ be transformed use this method: container.globalToLocal(mousePosition).
 */
 p.globalToLocal = function(v){
 	var invert = this.concatedMatrix.invert();
-      return invert.transform(v);
+  return invert.transform(v);
 };
 
 /*
@@ -301,16 +300,13 @@ p.localToGlobal = function(v){
 	return this.concatedMatrix.transform(v);
 };
 
-// private method, internal use only
-p.setStage = function(stage){
-	this.stage = stage;
-};
-
-/*
-Return true if the DisplayObject is on the stage.
-*/
-Object.defineProperty(p, "isOnStage", {
+Object.defineProperty(p, "stage", {
 	get: function(){
-		return this.stage != null;
+		return this._stage;
+	},
+	// private method, internal use only
+	// When the DisplayObject is removed from the display list, its stage will be nulled.
+	set: function(value){
+		this._stage = value;
 	}
 });

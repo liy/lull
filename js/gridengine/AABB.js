@@ -26,18 +26,18 @@ p.reset = function(rect){
 		this.vertices[2].zero();
 		this.vertices[3].zero();
 
-		this.lowerBound.setXY(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-		this.upperBound.setXY(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
+		this.lowerBound.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+		this.upperBound.set(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
 	}
 	else{
 		// ccw vertices arrangement
 		// 0------3
 		// |      |
 		// 1------2
-		this.vertices[0].setXY(rect.x, rect.y);
-		this.vertices[1].setXY(rect.left, rect.bottom);
-		this.vertices[2].setXY(rect.right, rect.bottom);
-		this.vertices[3].setXY(rect.right, rect.top);
+		this.vertices[0].set(rect.x, rect.y);
+		this.vertices[1].set(rect.left, rect.bottom);
+		this.vertices[2].set(rect.right, rect.bottom);
+		this.vertices[3].set(rect.right, rect.top);
 
 		this.lowerBound = this.vertices[0];
 		this.upperBound = this.vertices[2];
@@ -80,10 +80,10 @@ p.merge = function(child, matrix){
 
 	// The vertices will be updated to match with the upper and lower bounds. Then, if the DisplayObject's Container can
 	// use the vertices information to compute its own AABB.
-	this.vertices[0].setXY(this.lowerBound.x, this.lowerBound.y);
-	this.vertices[1].setXY(this.lowerBound.x, this.upperBound.y);
-	this.vertices[2].setXY(this.upperBound.x, this.upperBound.y);
-	this.vertices[3].setXY(this.upperBound.x, this.lowerBound.y);
+	this.vertices[0].set(this.lowerBound.x, this.lowerBound.y);
+	this.vertices[1].set(this.lowerBound.x, this.upperBound.y);
+	this.vertices[2].set(this.upperBound.x, this.upperBound.y);
+	this.vertices[3].set(this.upperBound.x, this.lowerBound.y);
 };
 
 /*

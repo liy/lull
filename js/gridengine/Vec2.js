@@ -17,7 +17,7 @@ var p = Vec2.prototype;
 /*
 Set the position of the Vector
 */
-p.setXY = function(x, y){
+p.set = function(x, y){
 	this.x = x;
 	this.y = y;
 };

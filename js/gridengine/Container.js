@@ -12,14 +12,14 @@ p.draw = function(renderer){
 	if(!this.visible)
 		return;
 
-	renderer.preDraw(this);
+	renderer.predraw(this);
 
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
 		this._children[i].draw(renderer);
 	}
 
-	renderer.postDraw(this);
+	renderer.postdraw(this);
 };
 
 /*
@@ -68,7 +68,7 @@ p.removeChildAt = function(index){
 	removed.parent = null;
 
 	// it is now off the stage.
-	removed.setStage = null;
+	removed.setStage(null);
 
 	// bounding box might be changed
 	this.dirtyAABB = true;
@@ -151,12 +151,14 @@ Object.defineProperty(p, "height", {
 	}
 });
 
-/*
-Make this Container on or off stage. Of course, all its children will be set as well.
-*/
-p.setStage = function(stage){
-	this.stage = stage;
-	for(var i=0; i<this._children.length; ++i){
-		this._children[i].setStage(stage);
+Object.defineProperty(p, "stage", {
+	// private method, internal use only
+	// When the DisplayObject is removed from the display list, its stage will be nulled.
+	// All its children's stage will be nulled.
+	set: function(value){
+		this._stage = value;
+		for(var i=0; i<this._children.length; ++i){
+			this._children[i].stage = value;
+		}
 	}
-};
+});

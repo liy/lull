@@ -16,9 +16,7 @@ function CanvasRenderer(width, height, container){
 }
 var p = CanvasRenderer.prototype = Object.create(Renderer.prototype);
 
-p.render = function(){
-  Renderer.prototype.render.call(this);
-  
+p.render = function(delta){
   this.stage.update();
 
   // draw stage

@@ -2,25 +2,49 @@
 <html>
 <head>
 <title></title>
-<script src="src/config.js"></script>
+<link rel="stylesheet" href="css/common.css">
 
-<script src="lib/EventDispatcher.js"></script>
+<script src="lib/stats.min.js"></script>
 
-<script src="lib/mvm/ModelEvent.js"></script>
-<script src="lib/mvm/Mediator.js"></script>
-<script src="lib/mvm/View.js"></script>
+<script src="js/config.js"></script>
 
-<script src="src/util/util.js"></script>
-<script src="src/util/ScriptLoader.js"></script>
+<script src="js/gridengine/EventDispatcher.js"></script>
 
-<script src="src/display/Animation.js"></script>
-<script src="src/display/Scenery.js"></script>
-<script src="src/util/SceneryFactory.js"></script>
+<script src="js/ModelEvent.js"></script>
+<script src="js/Mediator.js"></script>
+<script src="js/MediatorList.js"></script>
 
-<script type="src/editor/Toolbox.js"></script>
-<script type="src/editor/Editor.js"></script>
+<script src="js/util/util.js"></script>
+<script src="js/util/ScriptLoader.js"></script>
+
+<script src="js/gridengine/Vec2.js"></script>
+<script src="js/gridengine/Rect.js"></script>
+<script src="js/gridengine/AABB.js"></script>
+<script src="js/gridengine/Mat3.js"></script>
+<script src="js/gridengine/Node.js"></script>
+<script src="js/gridengine/SpriteSheet.js"></script>
+<script src="js/gridengine/DisplayObject.js"></script>
+<script src="js/gridengine/Bitmap.js"></script>
+<script src="js/gridengine/Container.js"></script>
+<script src="js/gridengine/Stage.js"></script>
+<script src="js/gridengine/Sprite.js"></script>
+<script src="js/gridengine/Renderer.js"></script>
+<script src="js/gridengine/CanvasRenderer.js"></script>
+
+<script src="js/display/Scene.js"></script>
+<script src="js/display/Scenery.js"></script>
+
+<script src="js/util/ActivityLoader.js"></script>
+<script src="js/util/SceneryFactory.js"></script>
+
+<script src='js/Runner.js'></script>
 </head>
 <body style="margin:0">
-<script src='main.js'></script>
+<div>
+  <a href='editor.html'>editor</a>
+  <a href='player.html'>player</a>
+  <a href='arena.html'>arena</a>
+</div>
+<script src="js/editor/Editor.js"></script>
 </body>
 </html>

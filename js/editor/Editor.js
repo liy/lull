@@ -5,10 +5,6 @@ stats.domElement.style.right = '0px';
 stats.domElement.style.top = '0px';
 document.body.appendChild(stats.domElement);
 
-
-var canvasRenderer = new CanvasRenderer();
-
-
 // The last timestamp when update is called
 var lastUpdateTime = getTickCount();
 // Just for calculate the delta time between different update call.
@@ -20,7 +16,24 @@ var updateTime = getTickCount();
 // current number of loops in input processing or update processing
 var loops = 0;
 
+
+var canvasRenderer = new CanvasRenderer();
+var scene = new Scene();
+canvasRenderer.stage.addChild(scene);
+
+var bmps = [];
+for(var i=0; i<1000; ++i){
+  bmps[i] = new Bitmap();
+  bmps[i].load("https://si0.twimg.com/profile_images/3109219879/69e64feb87d2cb0b3546653d99c70f2a_normal.png");
+  bmps[i].x = 800 * Math.random();
+  bmps[i].y = 600 * Math.random();
+  bmps[i].radian = Math.random() * Math.PI * 2;
+  canvasRenderer.stage.addChild(bmps[i]);
+}
+
 (function mainloop(){
+  stats.begin();
+  
   // reset loop count
   loops = 0;
   // processing update
@@ -42,8 +55,14 @@ var loops = 0;
     ++loops;
   }
 
+  for(var i=0; i<bmps.length; ++i){
+    bmps[i].radian += 0.01;
+    // bmps[i].x = Math.sin(bmps[i].radian) * 100 + 100;
+    // bmps[i].y = Math.cos(bmps[i].radian) * 100 + 100;
 
-  stats.begin();
+  }
+
+
   // render as much as possible. Does not care about the duplicate frames rendering
   canvasRenderer.render();
   stats.end();

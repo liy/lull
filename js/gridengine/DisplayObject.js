@@ -4,6 +4,8 @@
 function DisplayObject(){
 	Node.call(this);
 
+	this.graphics = new Graphics();
+
 	this._stage = null;
 	this.visible = true;
 

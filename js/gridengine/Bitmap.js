@@ -37,7 +37,7 @@ p.onload = function(){
 };
 
 p.draw = function(renderer){
-	if(!this.visible)
+	if(!this.visible || this.image == null || !this.image.complete)
 		return;
 
 	renderer.predraw(this);

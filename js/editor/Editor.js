@@ -18,22 +18,24 @@ var loops = 0;
 
 
 var canvasRenderer = new CanvasRenderer();
+canvasRenderer.canvas.width = 1024;
+canvasRenderer.canvas.height = 768;
 var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
 
 var bmps = [];
-for(var i=0; i<1000; ++i){
+for(var i=0; i<8000; ++i){
   bmps[i] = new Bitmap();
   bmps[i].load("https://si0.twimg.com/profile_images/3109219879/69e64feb87d2cb0b3546653d99c70f2a_normal.png");
-  bmps[i].x = 800 * Math.random();
-  bmps[i].y = 600 * Math.random();
+  bmps[i].x = canvasRenderer.canvas.width * Math.random();
+  bmps[i].y = canvasRenderer.canvas.height * Math.random();
   bmps[i].radian = Math.random() * Math.PI * 2;
   canvasRenderer.stage.addChild(bmps[i]);
 }
 
 (function mainloop(){
   stats.begin();
-  
+
   // reset loop count
   loops = 0;
   // processing update

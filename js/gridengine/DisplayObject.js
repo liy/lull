@@ -35,8 +35,8 @@ function DisplayObject(){
 var p = DisplayObject.prototype = Object.create(Node.prototype);
 
 /*
-Update the transform matrix of the DisplayObject. The process will only perform when the matrix is dirty, in other word, the position, scale, rotation and anchor off set,
-any of them changed, the matrix will be marked dirty, matrix will be updated when the method is called.
+Update the transform matrix of the DisplayObject. The process will only perform when the matrix is dirty, in other word, the position, scale, rotation and anchor offset,
+any of them change, the matrix will be marked dirty, matrix will be updated when the method is called.
 Note that, children's matrix changes DOES affect or propagate up through their ancestor's matrix. Also, if this DisplayObject is a Container, add or remove child
 DOES NOT affect the matrix of the Container.
 */

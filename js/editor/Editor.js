@@ -31,9 +31,17 @@ scene.graphics.drawRect(0, 0, 100, 100);
 scene.graphics.endFill();
 
 sub.name = 'sub';
-sub.graphics.beginFill('#00FF00', 1);
+sub.graphics.beginFill('#00FF00', 0.5);
 sub.graphics.drawRect(10, 10, 200, 200);
 sub.graphics.endFill();
+
+sub.graphics.beginFill('#FFFF00', 1);
+sub.graphics.drawRect(40, 40, 200, 200);
+sub.graphics.endFill();
+
+var bmp = new Bitmap();
+bmp.load('somacruz.png')
+sub.addChild(bmp);
 
 (function mainloop(){
   stats.begin();
@@ -63,29 +71,29 @@ sub.graphics.endFill();
   canvasRenderer.render();
   stats.end();
 
-  // requestAnimFrame(mainloop)
+  requestAnimFrame(mainloop)
 })();
 
 // var canvasRenderer = new CanvasRenderer();
-// canvasRenderer.context.fillStyle = '#FFF'   
+// canvasRenderer.context.fillStyle = '#FFF'
 // canvasRenderer.context.fillRect(0,0,150,150);
-// canvasRenderer.context.save();      
+// canvasRenderer.context.save();
 
 // canvasRenderer.context.fillStyle = '#FF0000';
-// canvasRenderer.context.translate(10, 10);      
+// canvasRenderer.context.translate(10, 10);
 // canvasRenderer.context.fillRect(0,0,120,120);
-// canvasRenderer.context.save();                  
+// canvasRenderer.context.save();
 
 // canvasRenderer.context.fillStyle = '#00FF00';
-// canvasRenderer.context.translate(10, 10);          
-// canvasRenderer.context.globalAlpha = 0.5;    
+// canvasRenderer.context.translate(10, 10);
+// canvasRenderer.context.globalAlpha = 0.5;
 // canvasRenderer.context.fillRect(0,0,90,90);
 
 // // // Restore previous state
-// canvasRenderer.context.restore();           
-// canvasRenderer.context.fillRect(0,0,60,60);   
+// canvasRenderer.context.restore();
+// canvasRenderer.context.fillRect(0,0,60,60);
 
 // // // Restore original state
 // canvasRenderer.context.restore();
-// // canvasRenderer.context.fillStyle = '#0000FF';  
-// canvasRenderer.context.fillRect(0,0,90,90);  
+// // canvasRenderer.context.fillStyle = '#0000FF';
+// canvasRenderer.context.fillRect(0,0,90,90);

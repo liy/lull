@@ -27,11 +27,12 @@ p.load = function(imageOrURL){
 };
 
 p.onload = function(){
-	console.log('bitmap loaded complete');
 	this._rect.width = this.image.width;
 	this._rect.height = this.image.height;
 
 	this._aabb.reset(this._rect);
+
+	console.log(this._rect);
 
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };

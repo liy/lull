@@ -16,7 +16,9 @@ p.draw = function(renderer){
 }
 
 p.clear = function(){
-  // this._commands.length = 0;
+  // clear this graphics equals to clear all the existing drawing command.
+  // Note that it also reset the color and alpha etc.
+  this._commands.length = 0;
 }
 
 p.beginFill = function(color, alpha){

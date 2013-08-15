@@ -18,12 +18,22 @@ var loops = 0;
 
 
 var canvasRenderer = new CanvasRenderer();
+
 var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
 
-scene.graphics.beginFill(0xFF0000, 1);
+var sub = new Container();
+scene.addChild(sub);
+
+scene.x = scene.y = 10;
+scene.graphics.beginFill('#FF0000', 1);
 scene.graphics.drawRect(0, 0, 100, 100);
 scene.graphics.endFill();
+
+sub.name = 'sub';
+sub.graphics.beginFill('#00FF00', 1);
+sub.graphics.drawRect(10, 10, 200, 200);
+sub.graphics.endFill();
 
 (function mainloop(){
   stats.begin();
@@ -53,5 +63,29 @@ scene.graphics.endFill();
   canvasRenderer.render();
   stats.end();
 
-  requestAnimFrame(mainloop)
+  // requestAnimFrame(mainloop)
 })();
+
+// var canvasRenderer = new CanvasRenderer();
+// canvasRenderer.context.fillStyle = '#FFF'   
+// canvasRenderer.context.fillRect(0,0,150,150);
+// canvasRenderer.context.save();      
+
+// canvasRenderer.context.fillStyle = '#FF0000';
+// canvasRenderer.context.translate(10, 10);      
+// canvasRenderer.context.fillRect(0,0,120,120);
+// canvasRenderer.context.save();                  
+
+// canvasRenderer.context.fillStyle = '#00FF00';
+// canvasRenderer.context.translate(10, 10);          
+// canvasRenderer.context.globalAlpha = 0.5;    
+// canvasRenderer.context.fillRect(0,0,90,90);
+
+// // // Restore previous state
+// canvasRenderer.context.restore();           
+// canvasRenderer.context.fillRect(0,0,60,60);   
+
+// // // Restore original state
+// canvasRenderer.context.restore();
+// // canvasRenderer.context.fillStyle = '#0000FF';  
+// canvasRenderer.context.fillRect(0,0,90,90);  

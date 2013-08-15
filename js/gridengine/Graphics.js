@@ -9,13 +9,14 @@ function Graphics(){
 var p = Graphics.prototype = Object.create(Node.prototype);
 
 p.draw = function(renderer){
-  renderer.predraw(this);
-  renderer.drawGraphics(this);
-  renderer.postdraw(this);
+  for(var i=0; i<this._commands.length; ++i){
+    var command = this._commands[i];
+    renderer[command.name].apply(renderer, command.params);
+  }
 }
 
 p.clear = function(){
-  this._commands.length = 0;
+  // this._commands.length = 0;
 }
 
 p.beginFill = function(color, alpha){

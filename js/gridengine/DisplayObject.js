@@ -65,7 +65,6 @@ Abstract method
 */
 p.draw = function(renderer){
 	// not implemented.
-	renderer.drawGraphics(this.graphics);
 };
 
 /*

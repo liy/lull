@@ -1,7 +1,7 @@
 function CanvasRenderer(width, height, container){
   Renderer.call(this);
 
-  this.clearColor = 0xFFF;
+  this.clearColor = 0xCCC;
 
   this.canvas = document.createElement('canvas');
   this.canvas.width = width || 640;
@@ -27,6 +27,8 @@ p.render = function(delta){
   this.context.fillStyle = '#' + this.clearColor.toString(16);
   // clear the screen
   this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  this.context.save();
+
   // reset identity
   this.stage._m.identity();
   // transform according to camera matrix
@@ -39,6 +41,8 @@ p.render = function(delta){
   for(var i=0; i<len; ++i){
     this.stage._children[i].draw(this);
   }
+
+  this.context.restore();
 }
 
 p.predraw = function(node){
@@ -52,8 +56,6 @@ p.predraw = function(node){
 
   // 2d affine transform
   this.context.transform(node._m.a,  node._m.b, node._m.c, node._m.d, node._m.tx+0.5|0, node._m.ty+0.5|0);
-  // ctx.transform(node._m.a, node._m.b, node._m.c, node._m.d, node._m.tx, node._m.ty);
-  // ctx.drawImage(node.image, node._rect.x, node._rect.y, node._rect.width, node._rect.height, 0, 0, node._rect.width, node._rect.height);
 }
 
 /**
@@ -72,27 +74,21 @@ p.draw = function(image, sx, sy, swidth, sheight, x, y, width, height){
   this.context.drawImage.apply(this.context, arguments);
 }
 
-p.drawGraphics = function(graphics){
-  for(var i=0; i<graphics._commands.length; ++i){
-    var command = graphics._commands[i];
-    this[command.name].apply(this, command.params);
-  }
-}
-
 p.postdraw = function(){
   // pop the last saved matrix state, assign to the context.
   this.context.restore();
 }
 
 p.beginFill = function(color, alpha){
-  this.context.fillStyle = '#' + color.toString(16);
+  this.context.fillStyle = color;
   this.context.beginPath();
 }
 
 p.drawRect = function(x, y, w, h){
   this.context.rect(x, y, w, h);
+  this.context.fill();
 }
 
 p.endFill = function(){
-  this.context.fill();
+  this.context.closePath();
 }

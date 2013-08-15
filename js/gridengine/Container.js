@@ -12,9 +12,9 @@ p.draw = function(renderer){
 	if(!this.visible)
 		return;
 
-	DisplayObject.prototype.draw.call(this, renderer);
-
 	renderer.predraw(this);
+
+	this.graphics.draw(renderer);
 
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
@@ -129,11 +129,9 @@ Object.defineProperty(p, "width", {
 		return this.aabb.width;
 	},
 	set: function(width){
-		var aabb = this.aabb;
-		if(aabb.width !== 0){
-			var scaleX = width/aabb.width;
-			this.scaleX = scaleX;
-		}
+		var scale = width/this.aabb.width;
+		if(scale !== 0)
+			this.scaleX = scale;
 	}
 });
 
@@ -145,11 +143,9 @@ Object.defineProperty(p, "height", {
 		return this.aabb.height;
 	},
 	set: function(height){
-		var aabb = this.aabb;
-		if(aabb.height !== 0){
-			var scaleY = height/aabb.height;
-			this.scaleY = scaleY;
-		}
+		var scale = height/this.aabb.height;
+		if(scale !== 0)
+			this.scaleY = scale;
 	}
 });
 

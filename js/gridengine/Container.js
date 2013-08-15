@@ -12,6 +12,8 @@ p.draw = function(renderer){
 	if(!this.visible)
 		return;
 
+	DisplayObject.prototype.draw.call(this, renderer);
+
 	renderer.predraw(this);
 
 	var len = this._children.length;

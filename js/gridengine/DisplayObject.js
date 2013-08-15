@@ -63,8 +63,9 @@ p.updateMatrix = function(){
 /*
 Abstract method
 */
-p.draw = function(ctx){
+p.draw = function(renderer){
 	// not implemented.
+	renderer.drawGraphics(this.graphics);
 };
 
 /*

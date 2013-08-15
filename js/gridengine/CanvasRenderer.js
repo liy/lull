@@ -1,6 +1,8 @@
 function CanvasRenderer(width, height, container){
   Renderer.call(this);
 
+  this.clearColor = 0xFFF;
+
   this.canvas = document.createElement('canvas');
   this.canvas.width = width || 640;
   this.canvas.height = height || 480;
@@ -8,7 +10,7 @@ function CanvasRenderer(width, height, container){
   canvasContainer.appendChild(this.canvas);
 
   this.context = this.canvas.getContext('2d');
-  this.context.fillStyle = '#CCC'
+  this.context.fillStyle = '#' + this.clearColor.toString(16);
 
   this.stage = new Stage(this);
 
@@ -22,6 +24,7 @@ p.render = function(delta){
   // draw stage
   // reset to identity matrix transform
   this.context.setTransform(1, 0, 0, 1, 0, 0);
+  this.context.fillStyle = '#' + this.clearColor.toString(16);
   // clear the screen
   this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   // reset identity
@@ -69,7 +72,27 @@ p.draw = function(image, sx, sy, swidth, sheight, x, y, width, height){
   this.context.drawImage.apply(this.context, arguments);
 }
 
+p.drawGraphics = function(graphics){
+  for(var i=0; i<graphics._commands.length; ++i){
+    var command = graphics._commands[i];
+    this[command.name].apply(this, command.params);
+  }
+}
+
 p.postdraw = function(){
   // pop the last saved matrix state, assign to the context.
   this.context.restore();
+}
+
+p.beginFill = function(color, alpha){
+  this.context.fillStyle = '#' + color.toString(16);
+  this.context.beginPath();
+}
+
+p.drawRect = function(x, y, w, h){
+  this.context.rect(x, y, w, h);
+}
+
+p.endFill = function(){
+  this.context.fill();
 }

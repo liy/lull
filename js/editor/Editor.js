@@ -18,20 +18,12 @@ var loops = 0;
 
 
 var canvasRenderer = new CanvasRenderer();
-canvasRenderer.canvas.width = 1024;
-canvasRenderer.canvas.height = 768;
 var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
 
-var bmps = [];
-for(var i=0; i<8000; ++i){
-  bmps[i] = new Bitmap();
-  bmps[i].load("https://si0.twimg.com/profile_images/3109219879/69e64feb87d2cb0b3546653d99c70f2a_normal.png");
-  bmps[i].x = canvasRenderer.canvas.width * Math.random();
-  bmps[i].y = canvasRenderer.canvas.height * Math.random();
-  bmps[i].radian = Math.random() * Math.PI * 2;
-  canvasRenderer.stage.addChild(bmps[i]);
-}
+scene.graphics.beginFill(0xFF0000, 1);
+scene.graphics.drawRect(0, 0, 100, 100);
+scene.graphics.endFill();
 
 (function mainloop(){
   stats.begin();
@@ -56,14 +48,6 @@ for(var i=0; i<8000; ++i){
     updateTime += CONFIG.MS_PER_UPDATE;
     ++loops;
   }
-
-  for(var i=0; i<bmps.length; ++i){
-    bmps[i].radian += 0.01;
-    // bmps[i].x = Math.sin(bmps[i].radian) * 100 + 100;
-    // bmps[i].y = Math.cos(bmps[i].radian) * 100 + 100;
-
-  }
-
 
   // render as much as possible. Does not care about the duplicate frames rendering
   canvasRenderer.render();

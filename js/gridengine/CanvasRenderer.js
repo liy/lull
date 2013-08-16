@@ -52,7 +52,7 @@ p.predraw = function(node){
   // push the current matrix state to the stack
   this.context.save();
 
-  this.context.globalAlpha *= node.alpha;
+  this.context.globalAlpha = node._getGlobalAlpha();
 
   // 2d affine transform
   this.context.transform(node._m.a,  node._m.b, node._m.c, node._m.d, node._m.tx+0.5|0, node._m.ty+0.5|0);

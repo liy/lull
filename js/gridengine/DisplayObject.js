@@ -312,3 +312,14 @@ Object.defineProperty(p, "stage", {
 		this._stage = value;
 	}
 });
+
+/**
+ * Recursively get the real alpha value. When draw the DisplayObject, its real alpha depends on its parent's alpha.
+ * @return {Number} Real alpha for drawing the DisplayObject.
+ */
+p._getGlobalAlpha = function(){
+	var alpha = this.alpha;
+	if(this.parent)
+		alpha *= this.parent._getGlobalAlpha();
+	return alpha;
+}

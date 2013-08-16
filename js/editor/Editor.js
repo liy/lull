@@ -23,14 +23,14 @@ var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
 
 scene.x = scene.y = 10;
-scene.graphics.beginFill('#FF0000', 1);
+scene.graphics.beginFill('#FF0000', 0.5);
 scene.graphics.drawRect(0, 0, 100, 100);
 scene.graphics.endFill();
 scene.alpha = 0.5;
 
 var sub = new Container();
 scene.addChild(sub);
-sub.alpha = 0.1;
+sub.alpha = 0.5;
 
 var bmp2 = new Bitmap();
 bmp2.load('https://si0.twimg.com/profile_images/1590336143/Raspi-PGB001_normal.png')

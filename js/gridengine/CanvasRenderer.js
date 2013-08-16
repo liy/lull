@@ -80,7 +80,7 @@ p.postdraw = function(){
 }
 
 p.beginFill = function(color, alpha){
-  this.context.globalAlpha = alpha;
+  this.context.globalAlpha *= alpha;
   this.context.fillStyle = color;
   this.context.beginPath();
 }

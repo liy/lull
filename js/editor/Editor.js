@@ -64,6 +64,8 @@ bmp2.x = 75;
     // then update game state and animation, etc.
     // _currentScene->Update(deltaTime);
     // editor->Update();
+    
+    scene.hitTest(9, 9);
 
     updateTime += CONFIG.MS_PER_UPDATE;
     ++loops;

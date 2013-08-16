@@ -68,6 +68,10 @@ p.draw = function(context){
 	// not implemented.
 };
 
+p.hitTest = function(x, y){
+	return HitTest.process(this, x, y);
+}
+
 /*
 The matrix of the DisplayObject.
 */

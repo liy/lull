@@ -29,6 +29,10 @@ function DisplayObject(){
 
 	this.alpha = 1;
 
+	// This canvas will contains a snapshot of the current DisplayObject.
+	// Hit test will become picking a position in this canvas, and check the alpha value is 0 or not.
+	this._pixelPerfectHitTestCanvas = null;
+
 	// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
 	this.dirtyMatrix = true;
 }
@@ -60,10 +64,7 @@ p.updateMatrix = function(){
 	}
 };
 
-/*
-Abstract method
-*/
-p.draw = function(renderer){
+p.draw = function(context){
 	// not implemented.
 };
 
@@ -310,6 +311,15 @@ Object.defineProperty(p, "stage", {
 	// When the DisplayObject is removed from the display list, its stage will be nulled.
 	set: function(value){
 		this._stage = value;
+	}
+});
+
+Object.defineProperty(p, "interaction", {
+	get: function(){
+		return this._interaction;
+	},
+	set: function(flag){
+		this._interaction = value;
 	}
 });
 

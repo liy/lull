@@ -8,20 +8,28 @@ var p = Container.prototype = Object.create(DisplayObject.prototype)
 /*
 Draw the Container onto the specific Canvas2D context.
 */
-p.draw = function(renderer){
+p.draw = function(context){
 	if(!this.visible)
 		return;
 
-	renderer.predraw(this);
+	// update matrix, getting ready for apply to the context.
+  this.updateMatrix();
+  // push the current matrix state to the stack
+  context.save();
+  context.globalAlpha = this._getGlobalAlpha();
+  // 2d affine transform
+  context.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
 
-	this.graphics.draw(renderer);
+  // draw graphics
+	this.graphics.draw(context);
 
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
-		this._children[i].draw(renderer);
+		this._children[i].draw(context);
 	}
 
-	renderer.postdraw(this);
+	// pop the last saved matrix state, assign to the context.
+  context.restore();
 };
 
 /*

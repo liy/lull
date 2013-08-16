@@ -37,13 +37,22 @@ p.onload = function(){
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
 
-p.draw = function(renderer){
+p.draw = function(context){
 	if(!this.visible || this.image == null || !this.image.complete)
 		return;
 
-	renderer.predraw(this);
-	renderer.draw(this.image, 0, 0);
-	renderer.postdraw(this);
+	// update matrix, getting ready for apply to the context.
+  this.updateMatrix();
+  // push the current matrix state to the stack
+  context.save();
+  context.globalAlpha = this._getGlobalAlpha();
+  // 2d affine transform
+  context.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
+
+  context.drawImage(this.image, 0, 0);
+
+	// pop the last saved matrix state, assign to the context.
+  context.restore();
 };
 
 /*

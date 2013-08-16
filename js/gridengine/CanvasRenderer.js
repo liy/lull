@@ -39,57 +39,8 @@ p.render = function(delta){
   }
   var len = this.stage._children.length;
   for(var i=0; i<len; ++i){
-    this.stage._children[i].draw(this);
+    this.stage._children[i].draw(this.context);
   }
 
   this.context.restore();
-}
-
-p.predraw = function(node){
-  // update matrix, getting ready for apply to the context.
-  node.updateMatrix();
-
-  // push the current matrix state to the stack
-  this.context.save();
-
-  this.context.globalAlpha = node._getGlobalAlpha();
-
-  // 2d affine transform
-  this.context.transform(node._m.a,  node._m.b, node._m.c, node._m.d, node._m.tx+0.5|0, node._m.ty+0.5|0);
-}
-
-/**
- * Draw the DisplayObject.
- * @param  {Image} image    Specifiy the image to draw
- * @param  {Number} sx      The x coordinate where to start clipping
- * @param  {Number} sy      The y coordinate where to start clipping
- * @param  {Number} swidth  Optional. The width of the clipped image
- * @param  {Number} sheight Optional. The height of the clipped image
- * @param  {Number} x       Optional. The x coordinate where to place the image on the canvas
- * @param  {Number} y       Optional. The y coordinate where to place the image on the canvas
- * @param  {Number} width   Optional. The width of the image to use (stretch or reduce the image)
- * @param  {Number} height  Optional. The height of the image to use (stretch or reduce the image)
- */
-p.draw = function(image, sx, sy, swidth, sheight, x, y, width, height){
-  this.context.drawImage.apply(this.context, arguments);
-}
-
-p.postdraw = function(){
-  // pop the last saved matrix state, assign to the context.
-  this.context.restore();
-}
-
-p.beginFill = function(color, alpha){
-  this.context.globalAlpha *= alpha;
-  this.context.fillStyle = color;
-  this.context.beginPath();
-}
-
-p.drawRect = function(x, y, w, h){
-  this.context.rect(x, y, w, h);
-  this.context.fill();
-}
-
-p.endFill = function(){
-  this.context.closePath();
 }

@@ -21,26 +21,27 @@ var canvasRenderer = new CanvasRenderer();
 
 var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
-
-scene.x = scene.y = 10;
-scene.graphics.beginFill('#FF0000', 0.5);
-scene.graphics.drawRect(0, 0, 100, 100);
-scene.graphics.endFill();
 scene.alpha = 0.5;
+scene.x = scene.y = 10;
+
+var bmp = new Bitmap();
+bmp.load('somacruz.png')
+bmp.y = 80;
+scene.addChild(bmp);
+
 
 var sub = new Container();
+sub.graphics.beginFill('#FF0000', 0.5);
+sub.graphics.drawRect(0, 0, 100, 100);
+sub.graphics.endFill();
 scene.addChild(sub);
-sub.alpha = 0.5;
 
 var bmp2 = new Bitmap();
 bmp2.load('https://si0.twimg.com/profile_images/1590336143/Raspi-PGB001_normal.png')
 sub.addChild(bmp2);
 bmp2.x = 75;
 
-var bmp = new Bitmap();
-bmp.load('somacruz.png')
-bmp.y = 80;
-scene.addChild(bmp);
+
 
 
 

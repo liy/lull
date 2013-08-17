@@ -18,6 +18,9 @@ function DisplayObject(){
 	this._scaleX = 1;
 	this._scaleY = 1;
 
+	this._width = 0;
+	this._height = 0;
+
 	// 2d affine transform matrix, internal use only.
 	this._m = new Mat3();
 
@@ -28,6 +31,9 @@ function DisplayObject(){
 	this._anchorY = 0;
 
 	this.alpha = 1;
+
+	// callback function after DisplayObject context drawing process finished.
+	this.onDraw = null;
 
 	// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
 	this.dirtyMatrix = true;
@@ -61,7 +67,7 @@ p.updateMatrix = function(){
 };
 
 p.draw = function(context){
-	// not implemented.
+	// needs implementation
 };
 
 p.hitTest = function(x, y){
@@ -77,7 +83,7 @@ Object.defineProperty(p, "matrix", {
 		this.updateMatrix();
 		return this._m;
 	},
-	// TODO: needs further improvment
+	// TODO: needs further improvement
 	set: function(m){
 		this._m = m;
 
@@ -166,34 +172,6 @@ Object.defineProperty(p, "y", {
 });
 
 /*
-X scale of the DisplayObject.
-*/
-Object.defineProperty(p, "scaleX", {
-	get: function(){
-		return this._scaleX;
-	},
-	set: function(sx){
-		this._scaleX = sx;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
-	}
-});
-
-/*
-Y scale of the DisplayObject.
-*/
-Object.defineProperty(p, "scaleY", {
-	get: function(){
-		return this._scaleY;
-	},
-	set: function(sy){
-		this._scaleY = sy;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
-	}
-});
-
-/*
 The radian of the DisplayObject.
 */
 Object.defineProperty(p, "radian", {
@@ -257,8 +235,37 @@ Object.defineProperty(p, "dirtyAABB", {
 
 		// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
 		// needs to be re-comput as well.
-		if(isDirty && this.parent != null)
+		if(isDirty && this.parent != null){
 			this.parent.dirtyAABB = true;
+		}
+	}
+});
+
+/*
+X scale of the DisplayObject.
+*/
+Object.defineProperty(p, "scaleX", {
+	get: function(){
+		return this._scaleX;
+	},
+	set: function(sx){
+		this._scaleX = sx;
+		this.dirtyMatrix = true;
+		this.dirtyAABB = true;
+	}
+});
+
+/*
+Y scale of the DisplayObject.
+*/
+Object.defineProperty(p, "scaleY", {
+	get: function(){
+		return this._scaleY;
+	},
+	set: function(sy){
+		this._scaleY = sy;
+		this.dirtyMatrix = true;
+		this.dirtyAABB = true;
 	}
 });
 
@@ -266,30 +273,38 @@ Object.defineProperty(p, "dirtyAABB", {
 Getter and setter
 */
 Object.defineProperty(p, "width", {
-  get: function(){
-    return this._width || this.aabb.width;
-  },
-  set: function(width){
-    this._width = width;
-    var scale = width/this.width;
-    if(scale !== 0)
-      this.scaleX = scale;
-  }
+	get: function(){
+		return this._width;
+	},
+	set: function(width){
+		var scale = width/this.aabb.width;
+		// console.log(scale);
+		if(scale !== 0){
+			this._width = width;
+			this.scaleX = scale;
+			this.dirtyMatrix = true;
+			this.dirtyAABB = true;
+		}
+	}
 });
 
 /*
 Getter and setter
 */
 Object.defineProperty(p, "height", {
-  get: function(){
-    return this._height || this.aabb.height;
-  },
-  set: function(height){
-    this._height = height;
-    var scale = height/this.height;
-    if(scale !== 0)
-      this.scaleY = scale;
-  }
+	get: function(){
+		return this._height;
+	},
+	set: function(height){
+		var scale = height/this.aabb.height;
+		if(scale !== 0){
+			// console.log(scale);
+			this._height = height;
+			this.scaleY = scale;
+			this.dirtyMatrix = true;
+			this.dirtyAABB = true;
+		}
+	}
 });
 
 /*

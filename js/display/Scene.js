@@ -9,11 +9,13 @@ function Scene(){
   this.width = 1024;
   this.height = 768;
 
-  this.drawFrame();
+  this.onDraw = this.drawFrame;
 }
 var p = Scene.prototype = Object.create(Container.prototype);
 
 p.drawFrame = function(){
+  this.graphics.clear();
+
   this.graphics.beginFill('#000', 1);
   this.graphics.drawRect(0, 0, this.width, this.height);
   this.graphics.endFill();

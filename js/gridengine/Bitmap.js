@@ -32,6 +32,8 @@ p.onload = function(){
 
 	this._aabb.reset(this._rect);
 
+	this.dirtyAABB = true;
+
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
 
@@ -49,6 +51,8 @@ p.draw = function(context){
 
   context.drawImage(this.image, 0, 0);
 
+  if(this.onDraw) this.onDraw(context);
+
 	// pop the last saved matrix state, assign to the context.
   context.restore();
 };
@@ -64,9 +68,7 @@ Object.defineProperty(p, "aabb", {
 			this._aabb.transform(this.matrix);
 
 			this.dirtyAABB = false;
-
-			if(this.name == "bmp")
-				console.log("perform Bitmap AABB transform");
+			console.log("perform Bitmap AABB transform");
 		}
 		// return the clone of the aabb.
 		return this._aabb;

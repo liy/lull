@@ -28,6 +28,8 @@ p.draw = function(context){
 		this._children[i].draw(context);
 	}
 
+	if(this.onDraw) this.onDraw(context);
+
 	// pop the last saved matrix state, assign to the context.
   context.restore();
 };
@@ -51,8 +53,8 @@ p.addChild = function(displayObject){
 	}
 
 	// Add the DisplayObject to this Container's children list.
-	this._children.push(displayObject);
 	displayObject.parent = this;
+	this._children.push(displayObject);
 
 	// bounding box might be changed
 	this.dirtyAABB = true;
@@ -118,6 +120,8 @@ Object.defineProperty(p, "aabb", {
 			// will be tightly wraps all its children's AABB.
 			var len = this._children.length;
 			for(var i=0; i<len; ++i){
+				// console.log(this._aabb);
+				// console.log(this._children[i].aabb);
 				this._aabb.merge(this._children[i].aabb, this.matrix);
 			}
 			// console.log("perform container AABB transform");

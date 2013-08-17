@@ -22,6 +22,46 @@ var canvasRenderer = new CanvasRenderer();
 var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
 
+var bmp = new Bitmap();
+bmp.addListener(Event.COMPLETE, function(){
+  (function mainloop(){
+    stats.begin();
+
+    // reset loop count
+    loops = 0;
+    // processing update
+    while(getTickCount() > updateTime && loops < CONFIG.MAX_FRAMES_SKIP){
+      // first update the physics collision detection
+      //_physicsEngine->Update();
+
+      var currentTime = getTickCount();
+      // calculate the delta mini seconds between different update call.
+      deltaTime = currentTime - lastUpdateTime;
+      // ready for next delta calculation, the current time become to the last update time.
+      lastUpdateTime = currentTime;
+
+      // then update game state and animation, etc.
+      // _currentScene->Update(deltaTime);
+      // editor->Update();
+
+      updateTime += CONFIG.MS_PER_UPDATE;
+      ++loops;
+    }
+
+    scene.width += (100 - scene.width)/20;
+    scene.height += (100 - scene.height)/20;
+    // console.log(scene.aabb.width);
+
+    // render as much as possible. Does not care about the duplicate frames rendering
+    canvasRenderer.render();
+    stats.end();
+
+    requestAnimFrame(mainloop)
+  })();
+})
+bmp.load('somacruz.png');
+scene.addChild(bmp);
+
 
 canvasRenderer.canvas.addEventListener('click', function(e){
   // console.log(e);
@@ -29,36 +69,3 @@ canvasRenderer.canvas.addEventListener('click', function(e){
   var y = e.y - canvasRenderer.canvas.offsetTop;
   console.log(scene.hitTest(x, y));
 }, false);
-
-
-
-(function mainloop(){
-  stats.begin();
-
-  // reset loop count
-  loops = 0;
-  // processing update
-  while(getTickCount() > updateTime && loops < CONFIG.MAX_FRAMES_SKIP){
-    // first update the physics collision detection
-    //_physicsEngine->Update();
-
-    var currentTime = getTickCount();
-    // calculate the delta mini seconds between different update call.
-    deltaTime = currentTime - lastUpdateTime;
-    // ready for next delta calculation, the current time become to the last update time.
-    lastUpdateTime = currentTime;
-
-    // then update game state and animation, etc.
-    // _currentScene->Update(deltaTime);
-    // editor->Update();
-
-    updateTime += CONFIG.MS_PER_UPDATE;
-    ++loops;
-  }
-
-  // render as much as possible. Does not care about the duplicate frames rendering
-  canvasRenderer.render();
-  stats.end();
-
-  requestAnimFrame(mainloop)
-})();

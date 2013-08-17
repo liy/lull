@@ -21,27 +21,14 @@ var canvasRenderer = new CanvasRenderer();
 
 var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
-scene.alpha = 0.5;
-scene.x = scene.y = 10;
-
-var bmp = new Bitmap();
-bmp.load('somacruz.png')
-bmp.y = 80;
-scene.addChild(bmp);
 
 
-var sub = new Container();
-sub.graphics.beginFill('#FF0000', 0.5);
-sub.graphics.drawRect(0, 0, 100, 100);
-sub.graphics.endFill();
-scene.addChild(sub);
-
-var bmp2 = new Bitmap();
-bmp2.load('https://si0.twimg.com/profile_images/1590336143/Raspi-PGB001_normal.png')
-sub.addChild(bmp2);
-bmp2.x = 75;
-
-
+canvasRenderer.canvas.addEventListener('click', function(e){
+  // console.log(e);
+  var x = e.x;
+  var y = e.y - canvasRenderer.canvas.offsetTop;
+  console.log(scene.hitTest(x, y));
+}, false);
 
 
 
@@ -64,8 +51,6 @@ bmp2.x = 75;
     // then update game state and animation, etc.
     // _currentScene->Update(deltaTime);
     // editor->Update();
-    
-    scene.hitTest(9, 9);
 
     updateTime += CONFIG.MS_PER_UPDATE;
     ++loops;
@@ -77,27 +62,3 @@ bmp2.x = 75;
 
   requestAnimFrame(mainloop)
 })();
-
-// var canvasRenderer = new CanvasRenderer();
-// canvasRenderer.context.fillStyle = '#FFF'
-// canvasRenderer.context.fillRect(0,0,150,150);
-// canvasRenderer.context.save();
-
-// canvasRenderer.context.fillStyle = '#FF0000';
-// canvasRenderer.context.translate(10, 10);
-// canvasRenderer.context.fillRect(0,0,120,120);
-// canvasRenderer.context.save();
-
-// canvasRenderer.context.fillStyle = '#00FF00';
-// canvasRenderer.context.translate(10, 10);
-// canvasRenderer.context.globalAlpha = 0.5;
-// canvasRenderer.context.fillRect(0,0,90,90);
-
-// // // Restore previous state
-// canvasRenderer.context.restore();
-// canvasRenderer.context.fillRect(0,0,60,60);
-
-// // // Restore original state
-// canvasRenderer.context.restore();
-// // canvasRenderer.context.fillStyle = '#0000FF';
-// canvasRenderer.context.fillRect(0,0,90,90);

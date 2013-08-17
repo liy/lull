@@ -5,19 +5,17 @@ HitTest.canvas.width = HitTest.canvas.height = 1;
 HitTest.context = HitTest.canvas.getContext('2d');
 
 HitTest.process = function(displayObject, x, y){
-  // push the current matrix state to the stack
   this.context.save();
-  // 2d affine transform
+  // since we only draw 1 pixel, the pixel that needs testing. Just translate the pixel to the 0, 0 position, that is translate -x, -y.
   this.context.transform(1, 0, 0, 1, -x, -y);
+  // draw the pixel that needs testing.
   displayObject.draw(this.context);
-  // pop the last saved matrix state, assign to the context.
   this.context.restore();
 
-  // TODO: do testing
+  // Get the alpha from the testing pxiel, If it is none 0, it's a hit
   var hit = this.context.getImageData(0, 0, 1, 1).data[3] > 0;
 
-  // TODO: clear
-  this.context.fillRect(0, 0, 1, 1);
+  this.context.clearRect(0, 0, 1, 1);
 
   return hit;
 }

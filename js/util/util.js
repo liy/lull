@@ -48,3 +48,11 @@ function inherit(child, parent){
 function getTickCount(){
   return (new Date()).getTime();
 }
+
+/**
+ * Make sure when do dragging on canvas does not change cursor into I-Beam cursor.
+ * @return {[type]} [description]
+ */
+document.onselectstart = function(e){
+  e.preventDefault();
+}

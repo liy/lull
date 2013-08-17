@@ -3,6 +3,10 @@ function GraphicsCommand(func, params){
   this.params = params;
 }
 
+/**
+ * FIXME: needs more work.
+ * note that 'this' in the _xxx method should refer to a canvas context
+ */
 function Graphics(){
   this._commands = [];
 }
@@ -26,7 +30,6 @@ p.beginFill = function(color, alpha){
 }
 
 p._beginFill = function(color, alpha){
-  // note this should refer to a canvas context
   this.globalAlpha *= alpha;
   this.fillStyle = color;
   this.beginPath();

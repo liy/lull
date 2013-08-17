@@ -29,10 +29,6 @@ function DisplayObject(){
 
 	this.alpha = 1;
 
-	// This canvas will contains a snapshot of the current DisplayObject.
-	// Hit test will become picking a position in this canvas, and check the alpha value is 0 or not.
-	this._pixelPerfectHitTestCanvas = null;
-
 	// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
 	this.dirtyMatrix = true;
 }
@@ -270,24 +266,30 @@ Object.defineProperty(p, "dirtyAABB", {
 Getter and setter
 */
 Object.defineProperty(p, "width", {
-	get: function(){
-		return this.aabb.width;
-	},
-	set: function(width){
-		// do nothing, need implementation.
-	}
+  get: function(){
+    return this._width || this.aabb.width;
+  },
+  set: function(width){
+    this._width = width;
+    var scale = width/this.width;
+    if(scale !== 0)
+      this.scaleX = scale;
+  }
 });
 
 /*
 Getter and setter
 */
 Object.defineProperty(p, "height", {
-	get: function(){
-		return this.aabb.height;
-	},
-	set: function(height){
-		// do nothing, need implementation.
-	}
+  get: function(){
+    return this._height || this.aabb.height;
+  },
+  set: function(height){
+    this._height = height;
+    var scale = height/this.height;
+    if(scale !== 0)
+      this.scaleY = scale;
+  }
 });
 
 /*

@@ -129,34 +129,6 @@ Object.defineProperty(p, "aabb", {
 	}
 });
 
-/*
-Getter and setter
-*/
-Object.defineProperty(p, "width", {
-	get: function(){
-		return this.aabb.width;
-	},
-	set: function(width){
-		var scale = width/this.aabb.width;
-		if(scale !== 0)
-			this.scaleX = scale;
-	}
-});
-
-/*
-Getter and setter
-*/
-Object.defineProperty(p, "height", {
-	get: function(){
-		return this.aabb.height;
-	},
-	set: function(height){
-		var scale = height/this.aabb.height;
-		if(scale !== 0)
-			this.scaleY = scale;
-	}
-});
-
 Object.defineProperty(p, "stage", {
 	// private method, internal use only
 	// When the DisplayObject is removed from the display list, its stage will be nulled.

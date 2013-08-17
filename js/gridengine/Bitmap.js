@@ -32,8 +32,6 @@ p.onload = function(){
 
 	this._aabb.reset(this._rect);
 
-	console.log(this._rect);
-
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
 

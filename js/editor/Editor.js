@@ -30,7 +30,7 @@ var bmp = new Bitmap();
 bmp.addListener(Event.COMPLETE, function(){
   sub.x = 200;
   sub.y = 200;
-  sub.width = 128/2;
+  // sub.width = 128/2;
   console.log(scene.width);
 
   (function mainloop(){
@@ -53,7 +53,7 @@ bmp.addListener(Event.COMPLETE, function(){
       // _currentScene->Update(deltaTime);
       // editor->Update();
 
-      // bmp.radian += 0.01;
+      // bmp.radian = Math.PI/2;
       // console.log(scene.width);
 
 

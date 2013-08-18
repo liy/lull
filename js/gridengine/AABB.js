@@ -50,21 +50,29 @@ p.transform = function(matrix){
 	return this;
 };
 
-/*
-Merge*/
-p.merge = function(child, matrix){
-	// If the DisplayObject's matrix is changed, or DisplayObject's children's matrix has changed. In either of the two situation,
+p.merge = function(childAABB, matrix){
+	// If the DisplayObject's matrix has changed, or DisplayObject's children's matrix has changed. In either of the two situation,
 	// the Container's AABB will be set to dirty and the cache must be re-computed. That is to say, we only need to check whether
 	// Container AABB is dirty or not to decide to update the cache.
 	if(this.isDirty){
 		console.log('calculate bound cache');
-		cacheBoundsForMerge(child, matrix);
+		var lowerBound = matrix.transformNew(childAABB.vertices[0]);
+		var upperBound = lowerBound;
+
+		for(var i=1; i<4; ++i){
+			var v = matrix.transformNew(childAABB.vertices[i]);
+			lowerBound = Vec2.min(lowerBound, v);
+			upperBound = Vec2.max(upperBound, v);
+		}
+		childAABB.lowerBoundForMerge = lowerBound;
+		childAABB.upperBoundForMerge = upperBound;
+
 		this.isDirty = false;
 	}
 
 	// We only need to compare the cached bounds with the Container's corresponding bounds to calculate the new bounds.
-	this.lowerBound = Vec2.min(this.lowerBound, child.lowerBoundForMerge);
-	this.upperBound = Vec2.max(this.upperBound, child.upperBoundForMerge);
+	this.lowerBound = Vec2.min(this.lowerBound, childAABB.lowerBoundForMerge);
+	this.upperBound = Vec2.max(this.upperBound, childAABB.upperBoundForMerge);
 
 	// The vertices will be updated to match with the upper and lower bounds. Then, if the DisplayObject's Container can
 	// use the vertices information to compute its own AABB.
@@ -134,21 +142,4 @@ p.set = function(x, y, w, h){
 	this.vertices[1].set(this.lowerBound.x, this.upperBound.y);
 	this.vertices[2].set(this.upperBound.x, this.upperBound.y);
 	this.vertices[3].set(this.upperBound.x, this.lowerBound.y);
-}
-
-/*
-Cache the lower and upper bounds for Container AABB merging purpose. As the parameters indicated, child AABB and its container's matrix.
-Either of them are changed, the cache must be re-computed.
-*/
-function cacheBoundsForMerge(childAABB, matrix){
-	var lowerBound = matrix.transformNew(childAABB.vertices[0]);
-	var upperBound = lowerBound;
-
-	for(var i=1; i<4; ++i){
-		var v = matrix.transformNew(childAABB.vertices[i]);
-		lowerBound = Vec2.min(lowerBound, v);
-		upperBound = Vec2.max(upperBound, v);
-	}
-	childAABB.lowerBoundForMerge = lowerBound;
-	childAABB.upperBoundForMerge = upperBound;
 }

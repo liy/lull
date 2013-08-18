@@ -49,6 +49,8 @@ p.updateMatrix = function(){
 	if(this.dirtyMatrix){
 		this._m.identity();
 
+		console.log('update matrix');
+
 		// Notice that these convinient methods act like generating corresponding transform matrix.
 		// The new matrix will be multiply to the current matrix:
 		//		this._m = newMatrix * this._m.
@@ -112,6 +114,9 @@ Object.defineProperty(p, "matrix", {
 
 		this._x = this._m.tx - this._anchorX;
 		this._y = this._m.ty - this._anchorY;
+
+		this.dirtyMatrix = true;
+		this.dirtyAABB = true;
 	}
 });
 
@@ -317,6 +322,10 @@ p.getBounds = function(targetCoordinateSpace){
 		m.multiplyLeft(target.matrix);
 }
 
+/**
+ * Cache the AABB. If AABB is not dirty, do not iterate through all vertices to get lower and upper bound, use cached instead.
+ * Detail please refer to the AABB class.
+ */
 Object.defineProperty(p, "dirtyAABB", {
 	get: function(){
 		return this._aabb.isDirty;

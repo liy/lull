@@ -33,7 +33,7 @@ bmp.addListener(Event.COMPLETE, function(){
   sub.graphics.beginFill('#FF0000', 1);
   sub.graphics.drawRect(0, 0, 128, 256);
   sub.graphics.endFill();
-  // sub.width = 128/2;
+  sub.width = 128/2;
   console.log(scene.width, scene.height);
 
   (function mainloop(){
@@ -57,7 +57,7 @@ bmp.addListener(Event.COMPLETE, function(){
       // editor->Update();
 
       // bmp.radian = Math.PI/2;
-      // console.log(scene.width);
+      // console.log(sub.getBounds(sub).width);
 
 
 

@@ -65,6 +65,7 @@ p._endFill = function(){
   this.closePath();
 }
 
+// Merge AABB with graphics' vertices.
 p.merge = function(aabb){
   var lowerBound, upperBound;
   var len = this.vertices.length;
@@ -77,12 +78,10 @@ p.merge = function(aabb){
       upperBound = Vec2.max(upperBound, this.vertices[i]);
     }
 
-    // We only need to compare the cached bounds with the Container's corresponding bounds to calculate the new bounds.
+
     aabb.lowerBound = Vec2.min(aabb.lowerBound, lowerBound);
     aabb.upperBound = Vec2.max(aabb.upperBound, upperBound);
 
-    // The vertices will be updated to match with the upper and lower bounds. Then, if the DisplayObject's Container can
-    // use the vertices information to compute its own AABB.
     aabb.vertices[0].set(aabb.lowerBound.x, aabb.lowerBound.y);
     aabb.vertices[1].set(aabb.lowerBound.x, aabb.upperBound.y);
     aabb.vertices[2].set(aabb.upperBound.x, aabb.upperBound.y);

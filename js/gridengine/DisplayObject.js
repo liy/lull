@@ -319,10 +319,17 @@ Object.defineProperty(p, "height", {
 });
 
 p.getBounds = function(targetCoordinateSpace){
-	var m = this.matrix.clone();
+	var m;
 	var target = this.parent;
-	while(target != targetCoordinateSpace && target != null)
+	while(target != targetCoordinateSpace && target != null){
+		m = target.matrix.clone();
 		m.multiplyLeft(target.matrix);
+		target = target.parent;
+	}
+
+	var aabb = this.getAABB().clone();
+	if(m) aabb.transform(m);
+	return new Rect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 }
 
 /**

@@ -20,6 +20,7 @@ var loops = 0;
 var canvasRenderer = new CanvasRenderer();
 
 var scene = new Scene();
+
 canvasRenderer.stage.addChild(scene);
 
 var bmp = new Bitmap();
@@ -44,13 +45,15 @@ bmp.addListener(Event.COMPLETE, function(){
       // _currentScene->Update(deltaTime);
       // editor->Update();
 
+      scene.width = 128/2;
+      // console.log(scene.width);
+
       updateTime += CONFIG.MS_PER_UPDATE;
       ++loops;
     }
 
-    scene.width += (100 - scene.width)/20;
-    scene.height += (100 - scene.height)/20;
-    // console.log(scene.aabb.width);
+    // scene.width += (100 - scene.width)/20;
+    // scene.height += (100 - scene.height)/20;
 
     // render as much as possible. Does not care about the duplicate frames rendering
     canvasRenderer.render();

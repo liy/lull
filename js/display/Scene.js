@@ -6,9 +6,6 @@ function Scene(){
   this.scenery = null;
   this.nodes = [];
 
-  this.width = 1024;
-  this.height = 768;
-
   this.onDraw = this.drawFrame;
 }
 var p = Scene.prototype = Object.create(Container.prototype);
@@ -16,11 +13,11 @@ var p = Scene.prototype = Object.create(Container.prototype);
 p.drawFrame = function(){
   this.graphics.clear();
 
-  this.graphics.beginFill('#000', 1);
-  this.graphics.drawRect(0, 0, this.width, this.height);
-  this.graphics.endFill();
+  // this.graphics.beginFill('#000', 1);
+  // this.graphics.drawRect(0, 0, this.width, this.height);
+  // this.graphics.endFill();
 
-  this.graphics.beginFill('#FFF', 1);
-  this.graphics.drawRect(5, 5, this.width-10, this.height-10);
-  this.graphics.endFill();
+  // this.graphics.beginFill('#FFF', 1);
+  // this.graphics.drawRect(5, 5, this.width-10, this.height-10);
+  // this.graphics.endFill();
 }

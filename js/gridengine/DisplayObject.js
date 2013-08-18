@@ -15,17 +15,19 @@ function DisplayObject(){
 	this._y = 0;
 
 	this._radian = 0;
+
 	this._scaleX = 1;
 	this._scaleY = 1;
 
-	this._width = 0;
-	this._height = 0;
+	/**
+	 * 1. child added removed
+	 * 2. child size changed
+	 * 3. child position moved
+	 */
+	this.aabb = new AABB();
 
 	// 2d affine transform matrix, internal use only.
 	this._m = new Mat3();
-
-	// TODO: Axis-aligned bounding box, for speeding up the rendering and hit test
-	this._aabb = new AABB(this);
 
 	this._anchorX = 0;
 	this._anchorY = 0;
@@ -34,9 +36,6 @@ function DisplayObject(){
 
 	// callback function after DisplayObject context drawing process finished.
 	this.onDraw = null;
-
-	// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
-	this.dirtyMatrix = true;
 }
 var p = DisplayObject.prototype = Object.create(Node.prototype);
 
@@ -47,23 +46,18 @@ Note that, children's matrix changes DOES affect or propagate up through their a
 DOES NOT affect the matrix of the Container.
 */
 p.updateMatrix = function(){
-	if(this.dirtyMatrix){
-		this._m.identity();
+	this._m.identity();
 
-		// Notice that these convinient methods act like generating corresponding transform matrix.
-		// The new matrix will be multiply to the current matrix:
-		//		this._m = newMatrix * this._m.
-		// Which means, the matrix gernerated by earlier methods will be applied first, the latter matrix will be applied later.
-		// Therefore, the transform sequence shoud be:
-		//		anchor translate  ->  scale  -> rotate  ->  position translate.
-		this._m.translate(-this.anchorX, -this.anchorY);//anchor translation transform
-		this._m.scale(this._scaleX, this._scaleY);// scale transform
-		this._m.rotate(this._radian);//rotation transform
-		this._m.translate(this._x, this._y);//normal position translation transform
-
-		// the matrix is clean, no need perform matrix construction again.
-		this.dirtyMatrix = false;
-	}
+	// Notice that these convinient methods act like generating corresponding transform matrix.
+	// The new matrix will be multiply to the current matrix:
+	//		this._m = newMatrix * this._m.
+	// Which means, the matrix gernerated by earlier methods will be applied first, the latter matrix will be applied later.
+	// Therefore, the transform sequence shoud be:
+	//		anchor translate  ->  scale  -> rotate  ->  position translate.
+	this._m.translate(-this.anchorX, -this.anchorY);//anchor translation transform
+	this._m.scale(this._scaleX, this._scaleY);// scale transform
+	this._m.rotate(this._radian);//rotation transform
+	this._m.translate(this._x, this._y);//normal position translation transform
 };
 
 p.draw = function(context){
@@ -117,9 +111,6 @@ Object.defineProperty(p, "matrix", {
 
 		this._x = this._m.tx - this._anchorX;
 		this._y = this._m.ty - this._anchorY;
-
-		this.dirtyAABB = true;
-		this.dirtyMatrix = true;
 	}
 });
 
@@ -152,8 +143,6 @@ Object.defineProperty(p, "x", {
 	},
 	set: function(x){
 		this._x = x;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
 	}
 });
 
@@ -166,8 +155,6 @@ Object.defineProperty(p, "y", {
 	},
 	set: function(y){
 		this._y = y;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
 	}
 });
 
@@ -180,8 +167,6 @@ Object.defineProperty(p, "radian", {
 	},
 	set: function(radian){
 		this._radian = radian;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
 	}
 });
 
@@ -194,8 +179,6 @@ Object.defineProperty(p, "anchorX", {
 	},
 	set: function(x){
 		this._anchorX = x;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
 	}
 });
 
@@ -208,102 +191,6 @@ Object.defineProperty(p, "anchorY", {
 	},
 	set: function(y){
 		this._anchorY = y;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
-	}
-});
-
-/*
-Getter and setter
-*/
-Object.defineProperty(p, "aabb", {
-	get: function(){
-		// dummy code
-		return this._aabb;
-	}
-});
-
-// Although this is a public property, it should be used internally.
-Object.defineProperty(p, "dirtyAABB", {
-	get: function(){
-		// dummy getter
-		return this._aabb.isDirty;
-	},
-	set: function(isDirty){
-		// mark the AABB to be the specific value.
-		this._aabb.isDirty = isDirty;
-
-		// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
-		// needs to be re-comput as well.
-		if(isDirty && this.parent != null){
-			this.parent.dirtyAABB = true;
-		}
-	}
-});
-
-/*
-X scale of the DisplayObject.
-*/
-Object.defineProperty(p, "scaleX", {
-	get: function(){
-		return this._scaleX;
-	},
-	set: function(sx){
-		this._scaleX = sx;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
-	}
-});
-
-/*
-Y scale of the DisplayObject.
-*/
-Object.defineProperty(p, "scaleY", {
-	get: function(){
-		return this._scaleY;
-	},
-	set: function(sy){
-		this._scaleY = sy;
-		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
-	}
-});
-
-/*
-Getter and setter
-*/
-Object.defineProperty(p, "width", {
-	get: function(){
-		return this._width;
-	},
-	set: function(width){
-		var scale = width/this.aabb.width;
-		// console.log(scale);
-		if(scale !== 0){
-			this._width = width;
-			this.scaleX = scale;
-			this.dirtyMatrix = true;
-			this.dirtyAABB = true;
-		}
-	}
-});
-
-/*
-Getter and setter
-*/
-Object.defineProperty(p, "height", {
-	get: function(){
-		return this._height;
-	},
-	set: function(height){
-		var scale = height/this.aabb.height;
-		if(scale !== 0){
-			// console.log(scale);
-			this._height = height;
-			this.scaleY = scale;
-			this.dirtyMatrix = true;
-			this.dirtyAABB = true;
-		}
 	}
 });
 
@@ -335,15 +222,6 @@ Object.defineProperty(p, "stage", {
 	}
 });
 
-Object.defineProperty(p, "interaction", {
-	get: function(){
-		return this._interaction;
-	},
-	set: function(flag){
-		this._interaction = value;
-	}
-});
-
 /**
  * Recursively get the real alpha value. When draw the DisplayObject, its real alpha depends on its parent's alpha.
  * @return {Number} Real alpha for drawing the DisplayObject.
@@ -353,4 +231,69 @@ p._getGlobalAlpha = function(){
 	if(this.parent)
 		alpha *= this.parent._getGlobalAlpha();
 	return alpha;
+}
+
+
+
+
+
+
+/*
+X scale of the DisplayObject.
+*/
+Object.defineProperty(p, "scaleX", {
+	get: function(){
+		return this._scaleX;
+	},
+	set: function(s){
+		this._scaleX = s;
+	}
+});
+
+/*
+Y scale of the DisplayObject.
+*/
+Object.defineProperty(p, "scaleY", {
+	get: function(){
+		return this._scaleY;
+	},
+	set: function(s){
+		this._scaleY = s;
+	}
+});
+
+Object.defineProperty(p, "width", {
+	get: function(){
+		if(this.aabb.width === Number.NEGATIVE_INFINITY)
+			return 0;
+		else
+			return this.aabb.width * this._scaleX;
+	},
+	set: function(v){
+		// console.log(this.aabb.width);
+		this._scaleX = v/this.aabb.width;
+	}
+});
+
+Object.defineProperty(p, "height", {
+	get: function(){
+		if(this.aabb.height === Number.NEGATIVE_INFINITY)
+			return 0;
+		else
+			return this.aabb.height * this._scaleY;
+	},
+	set: function(v){
+		this._scaleY = v/this.aabb.height;
+	}
+});
+
+p.getBounds = function(targetCoordinateSpace){
+	var m = this.matrix.clone();
+	var target = this.parent;
+	while(target != targetCoordinateSpace && target != null)
+		m.multiplyLeft(target.matrix);
+}
+
+p._updateAABB = function(){
+	// needs implementation.
 }

@@ -3,9 +3,6 @@ function Bitmap(){
 	DisplayObject.call(this);
 
 	this.image = null;
-
-	// the rectangle object define the area of the object, e.g., the image width and height
-	this._rect = new Rect();
 }
 var p = Bitmap.prototype = Object.create(DisplayObject.prototype);
 
@@ -27,12 +24,7 @@ p.load = function(imageOrURL){
 };
 
 p.onload = function(){
-	this._rect.width = this.image.width;
-	this._rect.height = this.image.height;
-
-	this._aabb.reset(this._rect);
-
-	this.dirtyAABB = true;
+	this._updateAABB();
 
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
@@ -57,29 +49,44 @@ p.draw = function(context){
   context.restore();
 };
 
-/*
-Calculate and return the AABB of the Bitmap instance.
-*/
-Object.defineProperty(p, "aabb", {
-	get: function(){
-		if(this._aabb.isDirty){
-			this._aabb.reset(this._rect);
-			// compute AABB, according to the matrix of the this Bitmap instance.
-			this._aabb.transform(this.matrix);
-
-			this.dirtyAABB = false;
-			console.log("perform Bitmap AABB transform");
-		}
-		// return the clone of the aabb.
-		return this._aabb;
-	}
-});
-
-/*
-Getter and setter
-*/
 Object.defineProperty(p, "complete", {
 	get: function(){
 		return this.image.complete;
 	}
 });
+
+
+Object.defineProperty(p, "width", {
+	// note that if you have to define getter and setter both of them at the same time for overriding!
+	get: function(){
+		if(this.image.width === Number.NEGATIVE_INFINITY)
+			return 0;
+		else
+			return this.image.width * this._scaleX;
+	},
+	set: function(v){
+		this._scaleX = v/this.image.width;
+	}
+});
+
+Object.defineProperty(p, "height", {
+	// note that if you have to define getter and setter both of them at the same time for overriding!
+	get: function(){
+		if(this.image.height === Number.NEGATIVE_INFINITY)
+			return 0;
+		else
+			return this.image.height * this._scaleY;
+	},
+	set: function(v){
+		this._scaleY = v/this.image.height;
+	}
+});
+
+p._updateAABB = function(){
+	this.aabb.set(this.x, this.y, this.image.width, this.image.height)
+
+	// update parent's aabb
+	if(this.parent) this.parent._updateAABB();
+
+	return this.aabb;
+}

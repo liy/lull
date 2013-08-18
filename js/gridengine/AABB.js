@@ -70,9 +70,9 @@ p.merge = function(child, matrix){
 	// If the DisplayObject's matrix is changed, or DisplayObject's children's matrix has changed. In either of the two situation,
 	// the Container's AABB will be set to dirty and the cache must be re-computed. That is to say, we only need to check whether
 	// Container AABB is dirty or not to decide to update the cache.
-	if(this.isDirty){
+	// if(this.isDirty){
 		cacheBoundsForMerge(child, matrix);
-	}
+	// }
 
 	// We only need to compare the cached bounds with the Container's corresponding bounds to calculate the new bounds.
 	this.lowerBound = Vec2.min(this.lowerBound, child.lowerBoundForMerge);
@@ -148,7 +148,20 @@ function cacheBoundsForMerge(childAABB, matrix){
 	}
 	childAABB.lowerBoundForMerge = lowerBound;
 	childAABB.upperBoundForMerge = upperBound;
+}
 
+p.set = function(x, y, w, h){
+	this.lowerBound.x = x;
+	this.lowerBound.y = y;
+	this.upperBound.x = x + w;
+	this.upperBound.y = y + h;
 
-	// console.log(childAABB.x, childAABB.y);
+	// ccw vertices arrangement
+		// 0------3
+		// |      |
+		// 1------2
+	this.vertices[0].set(this.lowerBound.x, this.lowerBound.y);
+	this.vertices[1].set(this.lowerBound.x, this.upperBound.y);
+	this.vertices[2].set(this.upperBound.x, this.upperBound.y);
+	this.vertices[3].set(this.upperBound.x, this.lowerBound.y);
 }

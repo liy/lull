@@ -56,8 +56,7 @@ p.addChild = function(displayObject){
 	displayObject.parent = this;
 	this._children.push(displayObject);
 
-	// bounding box might be changed
-	this.dirtyAABB = true;
+	this._updateAABB();
 };
 
 /*
@@ -82,8 +81,7 @@ p.removeChildAt = function(index){
 	// it is now off the stage.
 	removed.setStage(null);
 
-	// bounding box might be changed
-	this.dirtyAABB = true;
+	this._updateAABB();
 
 	return removed;
 };
@@ -105,34 +103,6 @@ p.contains = function(displayObject){
 	return this._children.indexOf(displayObject) != -1;
 };
 
-/*
-Compute an AABB for this Container.
-*/
-Object.defineProperty(p, "aabb", {
-	get: function(){
-		// Only calculate AABB when it is dirty.
-		if(this._aabb.isDirty){
-			// reset AABB so it is ready for perform merging.
-			this._aabb.reset();
-
-			// Scan all the children, merge their AABBs into this Container's AABB, notice that the Container's matrix is passed with the merging.
-			// That is because we need to merge the child's AABB after performed its Container's transformation, in this case, the Container's AABB
-			// will be tightly wraps all its children's AABB.
-			var len = this._children.length;
-			for(var i=0; i<len; ++i){
-				// console.log(this._aabb);
-				// console.log(this._children[i].aabb);
-				this._aabb.merge(this._children[i].aabb, this.matrix);
-			}
-			// console.log("perform container AABB transform");
-
-			// It is very computation heavy to compute an AABB for Container. Once an AABB is calculated once, it will be set to clean, no need to calculate again.
-			this.dirtyAABB = false;
-		}
-		return this._aabb;
-	}
-});
-
 Object.defineProperty(p, "stage", {
 	// private method, internal use only
 	// When the DisplayObject is removed from the display list, its stage will be nulled.
@@ -144,3 +114,20 @@ Object.defineProperty(p, "stage", {
 		}
 	}
 });
+
+p._updateAABB = function(){
+	// reset AABB so it is ready for perform merging.
+	this.aabb.reset();
+
+	var len = this._children.length;
+	for(var i=0; i<len; ++i){
+		this.aabb.merge(this._children[i].aabb, this._children[i].matrix);
+	}
+
+	console.log(this.aabb);
+
+	// update parent's aabb
+	if(this.parent) this.parent._updateAABB();
+
+	return this.aabb;
+}

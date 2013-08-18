@@ -1,6 +1,6 @@
 /**
-* Abstract class
-*/
+ * Abstract class
+ */
 function DisplayObject(){
 	Node.call(this);
 
@@ -19,12 +19,9 @@ function DisplayObject(){
 	this._scaleX = 1;
 	this._scaleY = 1;
 
-	/**
-	 * 1. child added removed
-	 * 2. child size changed
-	 * 3. child position moved
-	 */
-	this.aabb = new AABB();
+	// Do not use this._aabb directly, unless you know what you are doing. Use getAABB() instead.
+	// The getAABB() method is responsible for keeping AABB up to date, it will return you a correct AABB
+	this._aabb = new AABB();
 
 	// 2d affine transform matrix, internal use only.
 	this._m = new Mat3();
@@ -68,9 +65,6 @@ p.hitTest = function(x, y){
 	return HitTest.process(this, x, y);
 }
 
-/*
-The matrix of the DisplayObject.
-*/
 Object.defineProperty(p, "matrix", {
 	get: function(){
 		// ensure the matrix is up to date.
@@ -114,9 +108,9 @@ Object.defineProperty(p, "matrix", {
 	}
 });
 
-/*
-Concatenate all its parents matrix into one. This matrix can be used for producing local to global position.
-*/
+/**
+ * Concatenate all its parents matrix into one. This matrix can be used for producing local to global position.
+ */
 Object.defineProperty(p, "concatedMatrix", {
 	get: function(){
 		// just in case the matrix applied to this object is dirty.
@@ -134,9 +128,6 @@ Object.defineProperty(p, "concatedMatrix", {
 	}
 });
 
-/*
-X position of the DisplayObject.
-*/
 Object.defineProperty(p, "x", {
 	get: function(){
 		return this._x;
@@ -146,9 +137,6 @@ Object.defineProperty(p, "x", {
 	}
 });
 
-/*
-Y position of the DisplayObject.
-*/
 Object.defineProperty(p, "y", {
 	get: function(){
 		return this._y;
@@ -158,9 +146,6 @@ Object.defineProperty(p, "y", {
 	}
 });
 
-/*
-The radian of the DisplayObject.
-*/
 Object.defineProperty(p, "radian", {
 	get: function(){
 		return this._radian;
@@ -170,9 +155,6 @@ Object.defineProperty(p, "radian", {
 	}
 });
 
-/*
-The registration point X of the DisplayObject
-*/
 Object.defineProperty(p, "anchorX", {
 	get: function(){
 		return this._anchorX;
@@ -182,9 +164,6 @@ Object.defineProperty(p, "anchorX", {
 	}
 });
 
-/*
-The registration point Y of the DisplayObject.
-*/
 Object.defineProperty(p, "anchorY", {
 	get: function(){
 		return this._anchorY;
@@ -194,19 +173,35 @@ Object.defineProperty(p, "anchorY", {
 	}
 });
 
-/*
-Transform the global coordinate vector into the local coordinate system.
-For example, position a DisplayObject to where user click, but also into a scaled, rotated and translated Container. The mouse position must
-be transformed use this method: container.globalToLocal(mousePosition).
-*/
+
+/**
+ * Recursively get the real alpha value. When draw the DisplayObject, its real alpha depends on its parent's alpha.
+ * @return {Number} Real alpha for drawing the DisplayObject.
+ */
+p._getGlobalAlpha = function(){
+	var alpha = this.alpha;
+	if(this.parent)
+		alpha *= this.parent._getGlobalAlpha();
+	return alpha;
+}
+
+/**
+ * Transform the global coordinate vector into the local coordinate system.
+ * For example, position a DisplayObject to where user click, but also into a scaled, rotated and translated Container. The mouse position must
+ * be transformed use this method: container.globalToLocal(mousePosition).
+ * @param  {[type]} v [description]
+ * @return {[type]}   [description]
+ */
 p.globalToLocal = function(v){
 	var invert = this.concatedMatrix.invert();
   return invert.transform(v);
 };
 
-/*
-This perform an opposite action as globalToLocal method. It produce a 'global' position from the 'local' position.
-*/
+/**
+ * This perform an opposite action as globalToLocal method. It produce a 'global' position from the 'local' position.
+ * @param  {[type]} v [description]
+ * @return {[type]}   [description]
+ */
 p.localToGlobal = function(v){
 	return this.concatedMatrix.transform(v);
 };
@@ -221,18 +216,6 @@ Object.defineProperty(p, "stage", {
 		this._stage = value;
 	}
 });
-
-/**
- * Recursively get the real alpha value. When draw the DisplayObject, its real alpha depends on its parent's alpha.
- * @return {Number} Real alpha for drawing the DisplayObject.
- */
-p._getGlobalAlpha = function(){
-	var alpha = this.alpha;
-	if(this.parent)
-		alpha *= this.parent._getGlobalAlpha();
-	return alpha;
-}
-
 
 
 
@@ -262,28 +245,39 @@ Object.defineProperty(p, "scaleY", {
 	}
 });
 
+/**
+ * Keep AABB up to date
+ */
+p.getAABB = function(){
+	// ABSTRACT method
+	// needs proper implementation
+	// keep aabb up to date
+	return this._aabb;
+}
+
 Object.defineProperty(p, "width", {
 	get: function(){
-		if(this.aabb.width === Number.NEGATIVE_INFINITY)
+		var aabb = this.getAABB();
+		if(aabb.width === Number.NEGATIVE_INFINITY)
 			return 0;
 		else
-			return this.aabb.width * this._scaleX;
+			return aabb.width * this._scaleX;
 	},
 	set: function(v){
-		// console.log(this.aabb.width);
-		this._scaleX = v/this.aabb.width;
+		this._scaleX = v/this.getAABB().width;
 	}
 });
 
 Object.defineProperty(p, "height", {
 	get: function(){
-		if(this.aabb.height === Number.NEGATIVE_INFINITY)
+		var aabb = this.getAABB();
+		if(aabb.height === Number.NEGATIVE_INFINITY)
 			return 0;
 		else
-			return this.aabb.height * this._scaleY;
+			return aabb.height * this._scaleY;
 	},
 	set: function(v){
-		this._scaleY = v/this.aabb.height;
+		this._scaleY = v/this.getAABB().height;
 	}
 });
 

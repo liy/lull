@@ -24,8 +24,6 @@ p.load = function(imageOrURL){
 };
 
 p.onload = function(){
-	this._updateAABB();
-
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
 
@@ -82,11 +80,8 @@ Object.defineProperty(p, "height", {
 	}
 });
 
-p._updateAABB = function(){
-	this.aabb.set(this.x, this.y, this.image.width, this.image.height)
+p.getAABB = function(){
+	this._aabb.set(this.x, this.y, this.image.width, this.image.height)
 
-	// update parent's aabb
-	if(this.parent) this.parent._updateAABB();
-
-	return this.aabb;
+	return this._aabb;
 }

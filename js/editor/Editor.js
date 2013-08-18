@@ -20,8 +20,10 @@ var loops = 0;
 var canvasRenderer = new CanvasRenderer();
 
 var scene = new Scene();
-
 canvasRenderer.stage.addChild(scene);
+
+var sub = new Container();
+scene.addChild(sub);
 
 var bmp = new Bitmap();
 bmp.addListener(Event.COMPLETE, function(){
@@ -45,7 +47,8 @@ bmp.addListener(Event.COMPLETE, function(){
       // _currentScene->Update(deltaTime);
       // editor->Update();
 
-      scene.width = 128/2;
+      sub.x = 100;
+      sub.width = 128/2;
       // console.log(scene.width);
 
       updateTime += CONFIG.MS_PER_UPDATE;
@@ -63,7 +66,7 @@ bmp.addListener(Event.COMPLETE, function(){
   })();
 })
 bmp.load('somacruz.png');
-scene.addChild(bmp);
+sub.addChild(bmp);
 
 
 canvasRenderer.canvas.addEventListener('click', function(e){

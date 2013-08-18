@@ -5,9 +5,6 @@ function Container(){
 }
 var p = Container.prototype = Object.create(DisplayObject.prototype)
 
-/*
-Draw the Container onto the specific Canvas2D context.
-*/
 p.draw = function(context){
 	if(!this.visible)
 		return;
@@ -34,18 +31,12 @@ p.draw = function(context){
   context.restore();
 };
 
-/*
-Return the number of children in this Container
-*/
 Object.defineProperty(p, "numChildren", {
 	get: function(){
 		return this._children.length;
 	}
 });
 
-/*
-Add a DisplayObject into this Container.
-*/
 p.addChild = function(displayObject){
 	// first we need to remove it from its old Container.
 	if(displayObject.parent != null){
@@ -55,20 +46,12 @@ p.addChild = function(displayObject){
 	// Add the DisplayObject to this Container's children list.
 	displayObject.parent = this;
 	this._children.push(displayObject);
-
-	this._updateAABB();
 };
 
-/*
-Remove a DisplayObject from the Container.
-*/
 p.removeChild = function(displayObject){
 	this.removeChildAt(this._children.indexOf(displayObject));
 };
 
-/*
-Remove a DisplayObject indexed by the parameter. If index is out of bound, null is returned.
-*/
 p.removeChildAt = function(index){
 	if(index < 0 || index > this._children.length-1)
 		return null;
@@ -81,14 +64,9 @@ p.removeChildAt = function(index){
 	// it is now off the stage.
 	removed.setStage(null);
 
-	this._updateAABB();
-
 	return removed;
 };
 
-/*
-
-*/
 p.getChildAt = function(index){
 	if(index < 0 || index > this._children.length-1)
 		return null;
@@ -96,9 +74,6 @@ p.getChildAt = function(index){
 	return this._children[index];
 };
 
-/*
-Whether the Container contains the child.
-*/
 p.contains = function(displayObject){
 	return this._children.indexOf(displayObject) != -1;
 };
@@ -115,19 +90,14 @@ Object.defineProperty(p, "stage", {
 	}
 });
 
-p._updateAABB = function(){
+p.getAABB = function(){
 	// reset AABB so it is ready for perform merging.
-	this.aabb.reset();
+	this._aabb.reset();
 
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
-		this.aabb.merge(this._children[i].aabb, this._children[i].matrix);
+		this._aabb.merge(this._children[i].getAABB(), this._children[i].matrix);
 	}
 
-	console.log(this.aabb);
-
-	// update parent's aabb
-	if(this.parent) this.parent._updateAABB();
-
-	return this.aabb;
-}
+	return this._aabb;
+};

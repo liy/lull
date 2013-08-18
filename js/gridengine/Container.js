@@ -105,6 +105,7 @@ p.getAABB = function(){
 	}
 
 	// TODO: merge graphics vertices.
+	this.graphics.merge(this._aabb);
 
 	return this._aabb;
 };

@@ -30,8 +30,11 @@ var bmp = new Bitmap();
 bmp.addListener(Event.COMPLETE, function(){
   sub.x = 200;
   sub.y = 200;
+  sub.graphics.beginFill('#FF0000', 1);
+  sub.graphics.drawRect(0, 0, 128, 256);
+  sub.graphics.endFill();
   // sub.width = 128/2;
-  console.log(scene.width);
+  console.log(scene.width, scene.height);
 
   (function mainloop(){
     stats.begin();

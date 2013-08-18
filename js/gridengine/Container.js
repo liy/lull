@@ -46,6 +46,8 @@ p.addChild = function(displayObject){
 	// Add the DisplayObject to this Container's children list.
 	displayObject.parent = this;
 	this._children.push(displayObject);
+
+	this.dirtyAABB = true;
 };
 
 p.removeChild = function(displayObject){
@@ -55,6 +57,9 @@ p.removeChild = function(displayObject){
 p.removeChildAt = function(index){
 	if(index < 0 || index > this._children.length-1)
 		return null;
+
+	// mark all its parent container dirty first before it is removed.
+	this.dirtyAABB = true;
 
 	var removed = this._children[index];
 	// delete this._children[index];

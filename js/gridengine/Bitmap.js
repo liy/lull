@@ -24,6 +24,10 @@ p.load = function(imageOrURL){
 };
 
 p.onload = function(){
+	// update the AABB once for all!
+	this._aabb.set(this.x, this.y, this.image.width, this.image.height);
+	this.dirtyAABB = true;
+
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
 
@@ -64,6 +68,9 @@ Object.defineProperty(p, "width", {
 	},
 	set: function(v){
 		this._scaleX = v/this.image.width;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -77,11 +84,8 @@ Object.defineProperty(p, "height", {
 	},
 	set: function(v){
 		this._scaleY = v/this.image.height;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
-
-p.getAABB = function(){
-	this._aabb.set(this.x, this.y, this.image.width, this.image.height)
-
-	return this._aabb;
-}

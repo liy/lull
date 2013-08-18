@@ -9,7 +9,10 @@ function AABB(){
 	this.lowerBoundForMerge = this.lowerBound;
 	this.upperBoundForMerge = this.upperBound;
 
-	// transformed vertices
+	// ccw vertices arrangement
+		// 0------3
+		// |      |
+		// 1------2
 	this.vertices = [new Vec2(), new Vec2(), new Vec2(), new Vec2()];
 
 	this.isDirty = true;
@@ -19,31 +22,14 @@ var p = AABB.prototype;
 /*
 
 */
-p.reset = function(rect){
-	if(rect == null){
-		this.vertices[0].zero();
-		this.vertices[1].zero();
-		this.vertices[2].zero();
-		this.vertices[3].zero();
+p.reset = function(){
+	this.vertices[0].zero();
+	this.vertices[1].zero();
+	this.vertices[2].zero();
+	this.vertices[3].zero();
 
-		this.lowerBound.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-		this.upperBound.set(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
-	}
-	else{
-		// ccw vertices arrangement
-		// 0------3
-		// |      |
-		// 1------2
-		this.vertices[0].set(rect.x, rect.y);
-		this.vertices[1].set(rect.left, rect.bottom);
-		this.vertices[2].set(rect.right, rect.bottom);
-		this.vertices[3].set(rect.right, rect.top);
-
-		this.lowerBound = this.vertices[0];
-		this.upperBound = this.vertices[2];
-	}
-
-	this.isDirty = true;
+	this.lowerBound.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+	this.upperBound.set(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
 };
 
 /*
@@ -70,9 +56,11 @@ p.merge = function(child, matrix){
 	// If the DisplayObject's matrix is changed, or DisplayObject's children's matrix has changed. In either of the two situation,
 	// the Container's AABB will be set to dirty and the cache must be re-computed. That is to say, we only need to check whether
 	// Container AABB is dirty or not to decide to update the cache.
-	// if(this.isDirty){
+	if(this.isDirty){
+		console.log('calculate bound cache');
 		cacheBoundsForMerge(child, matrix);
-	// }
+		this.isDirty = false;
+	}
 
 	// We only need to compare the cached bounds with the Container's corresponding bounds to calculate the new bounds.
 	this.lowerBound = Vec2.min(this.lowerBound, child.lowerBoundForMerge);
@@ -99,7 +87,6 @@ p.clone = function(){
 	aabb.vertices[1] = this.vertices[1].clone();
 	aabb.vertices[2] = this.vertices[2].clone();
 	aabb.vertices[3] = this.vertices[3].clone();
-
 
 	aabb.lowerBoundForMerge = this.lowerBoundForMerge.clone();
 	aabb.upperBoundForMerge = this.upperBoundForMerge.clone();
@@ -133,6 +120,22 @@ Object.defineProperty(p, 'height', {
 	}
 });
 
+p.set = function(x, y, w, h){
+	this.lowerBound.x = x;
+	this.lowerBound.y = y;
+	this.upperBound.x = x + w;
+	this.upperBound.y = y + h;
+
+	// ccw vertices arrangement
+		// 0------3
+		// |      |
+		// 1------2
+	this.vertices[0].set(this.lowerBound.x, this.lowerBound.y);
+	this.vertices[1].set(this.lowerBound.x, this.upperBound.y);
+	this.vertices[2].set(this.upperBound.x, this.upperBound.y);
+	this.vertices[3].set(this.upperBound.x, this.lowerBound.y);
+}
+
 /*
 Cache the lower and upper bounds for Container AABB merging purpose. As the parameters indicated, child AABB and its container's matrix.
 Either of them are changed, the cache must be re-computed.
@@ -148,20 +151,4 @@ function cacheBoundsForMerge(childAABB, matrix){
 	}
 	childAABB.lowerBoundForMerge = lowerBound;
 	childAABB.upperBoundForMerge = upperBound;
-}
-
-p.set = function(x, y, w, h){
-	this.lowerBound.x = x;
-	this.lowerBound.y = y;
-	this.upperBound.x = x + w;
-	this.upperBound.y = y + h;
-
-	// ccw vertices arrangement
-		// 0------3
-		// |      |
-		// 1------2
-	this.vertices[0].set(this.lowerBound.x, this.lowerBound.y);
-	this.vertices[1].set(this.lowerBound.x, this.upperBound.y);
-	this.vertices[2].set(this.upperBound.x, this.upperBound.y);
-	this.vertices[3].set(this.upperBound.x, this.lowerBound.y);
 }

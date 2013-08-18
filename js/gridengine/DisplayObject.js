@@ -31,6 +31,9 @@ function DisplayObject(){
 
 	this.alpha = 1;
 
+	// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
+	this.dirtyMatrix = true;
+
 	// callback function after DisplayObject context drawing process finished.
 	this.onDraw = null;
 }
@@ -43,18 +46,22 @@ Note that, children's matrix changes DOES affect or propagate up through their a
 DOES NOT affect the matrix of the Container.
 */
 p.updateMatrix = function(){
-	this._m.identity();
+	if(this.dirtyMatrix){
+		this._m.identity();
 
-	// Notice that these convinient methods act like generating corresponding transform matrix.
-	// The new matrix will be multiply to the current matrix:
-	//		this._m = newMatrix * this._m.
-	// Which means, the matrix gernerated by earlier methods will be applied first, the latter matrix will be applied later.
-	// Therefore, the transform sequence shoud be:
-	//		anchor translate  ->  scale  -> rotate  ->  position translate.
-	this._m.translate(-this.anchorX, -this.anchorY);//anchor translation transform
-	this._m.scale(this._scaleX, this._scaleY);// scale transform
-	this._m.rotate(this._radian);//rotation transform
-	this._m.translate(this._x, this._y);//normal position translation transform
+		// Notice that these convinient methods act like generating corresponding transform matrix.
+		// The new matrix will be multiply to the current matrix:
+		//		this._m = newMatrix * this._m.
+		// Which means, the matrix gernerated by earlier methods will be applied first, the latter matrix will be applied later.
+		// Therefore, the transform sequence shoud be:
+		//		anchor translate  ->  scale  -> rotate  ->  position translate.
+		this._m.translate(-this.anchorX, -this.anchorY);//anchor translation transform
+		this._m.scale(this._scaleX, this._scaleY);// scale transform
+		this._m.rotate(this._radian);//rotation transform
+		this._m.translate(this._x, this._y);//normal position translation transform
+
+		this.dirtyMatrix = false;
+	}
 };
 
 p.draw = function(context){
@@ -134,6 +141,9 @@ Object.defineProperty(p, "x", {
 	},
 	set: function(x){
 		this._x = x;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -143,6 +153,9 @@ Object.defineProperty(p, "y", {
 	},
 	set: function(y){
 		this._y = y;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -152,6 +165,9 @@ Object.defineProperty(p, "radian", {
 	},
 	set: function(radian){
 		this._radian = radian;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -161,6 +177,8 @@ Object.defineProperty(p, "anchorX", {
 	},
 	set: function(x){
 		this._anchorX = x;
+
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -170,6 +188,8 @@ Object.defineProperty(p, "anchorY", {
 	},
 	set: function(y){
 		this._anchorY = y;
+
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -230,6 +250,9 @@ Object.defineProperty(p, "scaleX", {
 	},
 	set: function(s){
 		this._scaleX = s;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -242,6 +265,9 @@ Object.defineProperty(p, "scaleY", {
 	},
 	set: function(s){
 		this._scaleY = s;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -249,9 +275,6 @@ Object.defineProperty(p, "scaleY", {
  * Keep AABB up to date
  */
 p.getAABB = function(){
-	// ABSTRACT method
-	// needs proper implementation
-	// keep aabb up to date
 	return this._aabb;
 }
 
@@ -265,6 +288,9 @@ Object.defineProperty(p, "width", {
 	},
 	set: function(v){
 		this._scaleX = v/this.getAABB().width;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -278,6 +304,9 @@ Object.defineProperty(p, "height", {
 	},
 	set: function(v){
 		this._scaleY = v/this.getAABB().height;
+
+		this.dirtyAABB = true;
+		this.dirtyMatrix = true;
 	}
 });
 
@@ -288,6 +317,14 @@ p.getBounds = function(targetCoordinateSpace){
 		m.multiplyLeft(target.matrix);
 }
 
-p._updateAABB = function(){
-	// needs implementation.
-}
+Object.defineProperty(p, "dirtyAABB", {
+	get: function(){
+		return this._aabb.isDirty;
+	},
+	set: function(isDirty){
+		this._aabb.isDirty = isDirty;
+
+		if(isDirty && this.parent)
+			this.parent.dirtyAABB = true;
+	}
+});

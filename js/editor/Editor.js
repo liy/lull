@@ -21,12 +21,18 @@ var canvasRenderer = new CanvasRenderer();
 
 var scene = new Scene();
 canvasRenderer.stage.addChild(scene);
+console.log(scene.width);
 
 var sub = new Container();
 scene.addChild(sub);
 
 var bmp = new Bitmap();
 bmp.addListener(Event.COMPLETE, function(){
+  sub.x = 200;
+  sub.y = 200;
+  sub.width = 128/2;
+  console.log(scene.width);
+
   (function mainloop(){
     stats.begin();
 
@@ -47,9 +53,10 @@ bmp.addListener(Event.COMPLETE, function(){
       // _currentScene->Update(deltaTime);
       // editor->Update();
 
-      sub.x = 100;
-      sub.width = 128/2;
+      // bmp.radian += 0.01;
       // console.log(scene.width);
+
+
 
       updateTime += CONFIG.MS_PER_UPDATE;
       ++loops;

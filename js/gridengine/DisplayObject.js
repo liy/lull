@@ -280,6 +280,7 @@ Object.defineProperty(p, "scaleY", {
  * Keep AABB up to date
  */
 p.getAABB = function(){
+	// TODO: merge graphics vertices.
 	return this._aabb;
 }
 

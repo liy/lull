@@ -104,5 +104,7 @@ p.getAABB = function(){
 		this._aabb.merge(this._children[i].getAABB(), this._children[i].matrix);
 	}
 
+	// TODO: merge graphics vertices.
+
 	return this._aabb;
 };

@@ -16,67 +16,39 @@ var updateTime = getTickCount();
 // current number of loops in input processing or update processing
 var loops = 0;
 
-
 var canvasRenderer = new CanvasRenderer();
 
-var scene = new Scene();
-canvasRenderer.stage.addChild(scene);
-console.log(scene.width);
+var activity = new Activity(canvasRenderer.stage);
 
-var sub = new Container();
-scene.addChild(sub);
+(function mainloop(){
+  stats.begin();
 
-var bmp = new Bitmap();
-bmp.addListener(Event.COMPLETE, function(){
-  sub.x = 200;
-  sub.y = 200;
-  sub.graphics.beginFill('#FF0000', 1);
-  sub.graphics.drawRect(0, 0, 128, 256);
-  sub.graphics.endFill();
-  sub.width = 128/2;
-  console.log(scene.width, scene.height);
+  // reset loop count
+  loops = 0;
+  // processing update
+  while(getTickCount() > updateTime && loops < CONFIG.MAX_FRAMES_SKIP){
+    // first update the physics collision detection
+    //_physicsEngine->Update();
 
-  (function mainloop(){
-    stats.begin();
+    var currentTime = getTickCount();
+    // calculate the delta mini seconds between different update call.
+    deltaTime = currentTime - lastUpdateTime;
+    // ready for next delta calculation, the current time become to the last update time.
+    lastUpdateTime = currentTime;
 
-    // reset loop count
-    loops = 0;
-    // processing update
-    while(getTickCount() > updateTime && loops < CONFIG.MAX_FRAMES_SKIP){
-      // first update the physics collision detection
-      //_physicsEngine->Update();
+    // then update game state and animation, etc.
+    // _currentScene->Update(deltaTime);
 
-      var currentTime = getTickCount();
-      // calculate the delta mini seconds between different update call.
-      deltaTime = currentTime - lastUpdateTime;
-      // ready for next delta calculation, the current time become to the last update time.
-      lastUpdateTime = currentTime;
+    updateTime += CONFIG.MS_PER_UPDATE;
+    ++loops;
+  }
 
-      // then update game state and animation, etc.
-      // _currentScene->Update(deltaTime);
-      // editor->Update();
+  // render as much as possible. Does not care about the duplicate frames rendering
+  canvasRenderer.render();
+  stats.end();
 
-      // bmp.radian = Math.PI/2;
-      // console.log(sub.getBounds(sub).width);
-
-
-
-      updateTime += CONFIG.MS_PER_UPDATE;
-      ++loops;
-    }
-
-    // scene.width += (100 - scene.width)/20;
-    // scene.height += (100 - scene.height)/20;
-
-    // render as much as possible. Does not care about the duplicate frames rendering
-    canvasRenderer.render();
-    stats.end();
-
-    requestAnimFrame(mainloop)
-  })();
-})
-bmp.load('somacruz.png');
-sub.addChild(bmp);
+  requestAnimFrame(mainloop)
+})();
 
 
 canvasRenderer.canvas.addEventListener('click', function(e){

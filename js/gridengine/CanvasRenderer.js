@@ -4,8 +4,8 @@ function CanvasRenderer(width, height, container){
   this.clearColor = 0xCCC;
 
   this.canvas = document.createElement('canvas');
-  this.canvas.width = width || 640;
-  this.canvas.height = height || 480;
+  this.canvas.width = width || 800;
+  this.canvas.height = height || 600;
   var canvasContainer = container || document.getElementsByTagName('body')[0];
   canvasContainer.appendChild(this.canvas);
 

@@ -49,7 +49,7 @@ p.updateMatrix = function(){
 	if(this.dirtyMatrix){
 		this._m.identity();
 
-		console.log('update matrix');
+		// console.log('update matrix');
 
 		// Notice that these convinient methods act like generating corresponding transform matrix.
 		// The new matrix will be multiply to the current matrix:

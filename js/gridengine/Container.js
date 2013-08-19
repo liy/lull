@@ -5,10 +5,7 @@ function Container(){
 }
 var p = Container.prototype = Object.create(DisplayObject.prototype)
 
-p.draw = function(context){
-	if(!this.visible)
-		return;
-
+p.updateContext = function(context){
 	// update matrix, getting ready for apply to the context.
   this.updateMatrix();
   // push the current matrix state to the stack
@@ -16,20 +13,29 @@ p.draw = function(context){
   context.globalAlpha = this._getGlobalAlpha();
   // 2d affine transform
   context.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
+}
 
+p.draw = function(context){
   // draw graphics
 	this.graphics.draw(context);
 
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
-		this._children[i].draw(context);
+		if(this.visible){
+			this._children[i].updateContext(context);
+			this._children[i].draw(context);
+			this._children[i].postDraw(context);
+		}
 	}
 
-	if(this.onDraw) this.onDraw(context);
+	if(this.onDraw) 
+		this.onDraw(context);
+};
 
+p.postDraw = function(context){
 	// pop the last saved matrix state, assign to the context.
   context.restore();
-};
+}
 
 Object.defineProperty(p, "numChildren", {
 	get: function(){

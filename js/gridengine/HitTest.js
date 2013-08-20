@@ -5,19 +5,21 @@ HitTest.canvas.width = HitTest.canvas.height = 1;
 HitTest.context = HitTest.canvas.getContext('2d');
 
 HitTest.process = function(displayObject, x, y){
-  this.context.save();
-  // since we only draw 1 pixel, the pixel that needs testing. Just translate the pixel to the 0, 0 position, that is translate -x, -y.
-  this.context.setTransform(1, 0, 0, 1, -x, -y);
+  // console.log(x,y);
+
+  // With all its transformation matrix ready, directly draw the display object onto the 1px context.
+  // And then, simply do a inverse of the mouse position to locate the correct pixel.
+  var m = displayObject.concatedMatrix;
+  HitTest.context.setTransform(m.a, m.b, m.c, m.d, m.tx-x, m.ty-y);
   // draw the pixel that needs testing.
-  displayObject.draw(this.context);
+  displayObject.draw(HitTest.context);
 
-  // Get the alpha from the testing pxiel, If it is none 0, it's a hit
-  var hit = this.context.getImageData(0, 0, 1, 1).data[3] > 0;
+  // Get the alpha from the testing pixel, If it is none 0, it's a hit
+  var hit = HitTest.context.getImageData(0, 0, 1, 1).data[3] > 0;
 
-  console.log(displayObject, this.context.getImageData(0, 0, 1, 1).data, hit);
-
-  this.context.restore();
-  this.context.clearRect(0, 0, 1, 1);
+  // reset and clear the 1 pixel context.
+  HitTest.context.setTransform(1, 0, 0, 1, 0, 0);
+  HitTest.context.clearRect(0, 0, 1, 1);
 
   return hit;
 }

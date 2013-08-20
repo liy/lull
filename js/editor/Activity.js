@@ -46,8 +46,10 @@ p.onComplete = function(){
   for(var i=0; i<1; ++i){
     this.scenes[i] = new Scene(this.slots[i].width, this.slots[i].height);
     this.addChild(this.scenes[i]);
-    this.scenes[i].x = this.slots[i].x;
-    this.scenes[i].y = this.slots[i].y;
+    // this.scenes[i].x = this.slots[i].x;
+    // this.scenes[i].y = this.slots[i].y;
+    // this.scenes[i].x = 10
+    // this.scenes[i].y = 15
   }
 }
 

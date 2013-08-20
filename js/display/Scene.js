@@ -13,5 +13,13 @@ function Scene(w, h){
     this.addChild(bmp);
     // bmp.scaleX = bmp.scaleY = 0.4;
   // }
+
+  this.addListener('mouseup', function(e){
+    console.log(e);
+  })
+
+  bmp.addListener('mousedown', function(e){
+    console.log(e);
+  })
 }
 var p = Scene.prototype = Object.create(Container.prototype);

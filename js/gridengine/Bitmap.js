@@ -28,7 +28,7 @@ p.onload = function(){
 	this.getAABB();
 	this.dirtyAABB = true;
 
-	this.dispatchEvent(new Event(Event.COMPLETE));
+	// this.dispatchEvent(new Event(Event.COMPLETE));
 };
 
 p.updateContext = function(context){

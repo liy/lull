@@ -9,3 +9,7 @@ renderer.stage.addChild(bmp);
 bmp.scaleX = bmp.scaleY = 0.5;
 bmp.x = 300;
 bmp.y = 400;
+
+bmp.addEventListener('click', function(e){
+  console.log(e.toString());
+})

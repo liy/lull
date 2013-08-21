@@ -14,12 +14,23 @@ function Scene(w, h){
     // bmp.scaleX = bmp.scaleY = 0.4;
   // }
 
-  this.addListener('mouseup', function(e){
-    console.log(e);
+  // this.addEventListener('click', function(e){
+  //   console.log(e.eventPhase);
+  // })
+
+  // bmp.addEventListener('click', function(e){
+  //   console.log(e.eventPhase);
+  // })
+
+
+  this.addEventListener('click', function(e){
+    console.log("scene");
+    console.log(e.eventPhase);
   })
 
-  bmp.addListener('mousedown', function(e){
-    console.log(e);
+  bmp.addEventListener('click', function(e){
+    console.log("bmp");
+    console.log(e.eventPhase);
   })
 }
 var p = Scene.prototype = Object.create(Container.prototype);

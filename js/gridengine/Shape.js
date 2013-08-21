@@ -1,3 +1,4 @@
+// TODO: merge Shape and Graphics class.
 function Shape(){
   DisplayObject.call(this);
 

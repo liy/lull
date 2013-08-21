@@ -3,9 +3,13 @@
 function Scene(w, h){
   Container.call(this);
 
-  // this.graphics.beginFill('#FFF', 1);
-  // this.graphics.drawRect(0, 0, w, h);
-  // this.graphics.endFill();
+  var shape = new Shape();
+  this.addChild(shape);
+
+  shape.graphics.beginFill('#118822', 1);
+  shape.graphics.drawRect(0, 0, w, h);
+  shape.graphics.endFill();
+  shape.x = 20;
 
   // if(Math.random() < 0.3){
     var bmp = new Bitmap();

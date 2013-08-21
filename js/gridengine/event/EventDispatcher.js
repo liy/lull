@@ -21,9 +21,6 @@ var p = EventDispatcher.prototype;
  *                            Instead, you can disable useCapture, or add listener to the Container and use capture phase.
  */
 p.addEventListener = function(type, listener, useCapture){
-  // TODO: if the event type is a mouse event related type, add the node to a special storage.
-  // So later mouse interaction check can only perform the check on those nodes.
-
   var listeners;
   if(useCapture){
     if(!this._captures[type]) 

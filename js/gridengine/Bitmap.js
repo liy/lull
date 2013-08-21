@@ -96,7 +96,6 @@ Object.defineProperty(p, "height", {
 
 p.getAABB = function(){
 	this._aabb.set(this.x, this.y, this.image.width, this.image.height);
-	this.graphics.merge(this._aabb);
 
 	return this._aabb;
 }

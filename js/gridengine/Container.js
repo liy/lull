@@ -5,20 +5,7 @@ function Container(){
 }
 var p = Container.prototype = Object.create(DisplayObject.prototype)
 
-p.updateContext = function(context){
-	// update matrix, getting ready for apply to the context.
-  this.updateMatrix();
-  // push the current matrix state to the stack
-  context.save();
-  context.globalAlpha = this._getGlobalAlpha();
-  // 2d affine transform
-  context.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
-}
-
 p.draw = function(context){
-  // draw graphics
-	this.graphics.draw(context);
-
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
 		if(this.visible){
@@ -28,14 +15,9 @@ p.draw = function(context){
 		}
 	}
 
-	if(this.onDraw) 
+	if(this.onDraw)
 		this.onDraw(context);
 };
-
-p.postDraw = function(context){
-	// pop the last saved matrix state, assign to the context.
-  context.restore();
-}
 
 Object.defineProperty(p, "numChildren", {
 	get: function(){
@@ -109,9 +91,6 @@ p.getAABB = function(){
 	for(var i=0; i<len; ++i){
 		this._aabb.merge(this._children[i].getAABB(), this._children[i].matrix);
 	}
-
-	// TODO: merge graphics vertices.
-	this.graphics.merge(this._aabb);
 
 	return this._aabb;
 };

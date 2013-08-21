@@ -88,3 +88,22 @@ p.merge = function(aabb){
     aabb.vertices[3].set(aabb.upperBound.x, aabb.lowerBound.y);
   }
 };
+
+p.updateAABB = function(aabb){
+  var lowerBound, upperBound;
+  var len = this.vertices.length;
+
+  if(len > 0){
+    upperBound = lowerBound = this.vertices[0];
+
+    for(var i=1; i<this.vertices.length; ++i){
+      lowerBound = Vec2.min(lowerBound, this.vertices[i]);
+      upperBound = Vec2.max(upperBound, this.vertices[i]);
+    }
+
+    aabb.vertices[0].set(lowerBound.x, lowerBound.y);
+    aabb.vertices[1].set(lowerBound.x, upperBound.y);
+    aabb.vertices[2].set(upperBound.x, upperBound.y);
+    aabb.vertices[3].set(upperBound.x, lowerBound.y);
+  }
+}

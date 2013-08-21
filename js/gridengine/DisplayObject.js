@@ -4,8 +4,6 @@
 function DisplayObject(){
 	Node.call(this);
 
-	this.graphics = new Graphics();
-
 	this._stage = null;
 	this.visible = true;
 
@@ -66,9 +64,24 @@ p.updateMatrix = function(){
 	}
 };
 
+p.updateContext = function(context){
+	// update matrix, getting ready for apply to the context.
+  this.updateMatrix();
+  // push the current matrix state to the stack
+  context.save();
+  context.globalAlpha = this._getGlobalAlpha();
+  // 2d affine transform
+  context.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
+}
+
 p.draw = function(context){
 	// needs implementation
 };
+
+p.postDraw = function(context){
+	// pop the last saved matrix state, assign to the context.
+  context.restore();
+}
 
 p.hitTest = function(x, y){
 	return HitTest.process(this, x, y);
@@ -280,9 +293,6 @@ Object.defineProperty(p, "scaleY", {
  * Keep AABB up to date
  */
 p.getAABB = function(){
-	// TODO: merge graphics vertices.
-	this.graphics.merge(this._aabb);
-
 	return this._aabb;
 }
 

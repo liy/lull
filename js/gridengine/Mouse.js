@@ -4,10 +4,11 @@ function Mouse(renderer){
   this._mouseDownTarget = null;
   this._mouseUpTarget = null;
 
-  renderer.canvas.addEventListener('click', bind(this, this.handler), false);
+  renderer.canvas.addEventListener('click', bind(this, this.clickHandler), false);
   // renderer.canvas.addEventListener('mousemove', bind(this, this.handler), false);
   // renderer.canvas.addEventListener('mousedown', bind(this, this.handler), false);
   // renderer.canvas.addEventListener('mouseup', bind(this, this.handler), false);
+  this._position = new Vec2();
 }
 var p = Mouse.prototype;
 
@@ -21,7 +22,7 @@ var p = Mouse.prototype;
  * mouseup   MouseEvent  DOM L3  A pointing device button is released over an element.
  */
 
-p.handler = function(e){
+p.clickHandler = function(e){
   // Get the mouse position.
   var x,y;
   if (e.pageX || e.pageY){
@@ -34,34 +35,14 @@ p.handler = function(e){
   }
   x -= this.renderer.canvas.offsetLeft;
   y -= this.renderer.canvas.offsetTop;
-
+  
   // reset the array, getting ready to store object under the mouse position.
-  var hitNode;
-  this.traverse(hitNode, e.type, this.renderer.stage, x, y);
+  var target = this.renderer.stage.getObjectUnder(x, y);
+
+  console.log(target.name);
 
   if(target){
     var local = target.globalToLocal(new Vec2(x, y));
     target.dispatchEvent(new MouseEvent(e.type, true, x, y, local.x, local.y));
-  }
-}
-
-p.traverse = function(type, node, x, y){
-  var isContainer = node instanceof Container;
-
-  var hit = HitTest.process(node, x, y);
-  if(hit){
-    hitNode = node;
-    if(!isContainer)
-      return hitNode;
-  }
-
-  if(isContainer){
-    var len = node.numChildren;
-    for(var i=0; i<len; ++i){
-      this.traverse(type, node.getChildAt(i), x, y);
-    }
-  }
-  else{
-    
   }
 }

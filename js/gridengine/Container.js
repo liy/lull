@@ -94,3 +94,28 @@ p.getAABB = function(){
 
 	return this._aabb;
 };
+
+/**
+ * [getObjectUnder description]
+ * @param  {[type]} x Global x coordinate
+ * @param  {[type]} y Global y coordinate
+ * @return {[type]}   The hit DisplayObject
+ */
+p.getObjectUnder = function(x, y){
+	var result = null;
+	var len = this.numChildren;
+	for(var i=len-1; i>=0; --i){
+		var child = this.getChildAt(i);
+
+		if(child instanceof Container){
+			result = child.getObjectUnder(x, y);
+		}
+		else{
+			// hit
+			if(HitTest.process(child, x, y))
+				return child;
+		}
+	}
+
+	return result;
+}

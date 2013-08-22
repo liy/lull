@@ -11,12 +11,25 @@ function Scene(w, h){
   shape.graphics.endFill();
   shape.x = 20;
 
-  // if(Math.random() < 0.3){
+
+  var tx = 30;
+  var ty = 30;
+  var alpha = 0.2;
+  var radian = 0;
+  for(var i=0; i<10; ++i){
     var bmp = new Bitmap();
     bmp.load('somacruz.png');
     this.addChild(bmp);
-    // bmp.scaleX = bmp.scaleY = 0.4;
-  // }
+    bmp.name = i;
+    bmp.x = tx;
+    bmp.y = ty;
+    bmp.radian = radian
+    bmp.alpha = alpha;
+    tx += 30;
+    ty += 40;
+    alpha /= 0.8;
+    radian += 0.04;
+  }
 
   // this.addEventListener('click', function(e){
   //   console.log(e.eventPhase);
@@ -27,14 +40,17 @@ function Scene(w, h){
   // })
 
 
-  this.addEventListener('click', function(e){
-    console.log("scene");
-    console.log(e.eventPhase);
-  })
 
-  bmp.addEventListener('click', function(e){
-    console.log("bmp");
-    console.log(e.eventPhase);
-  })
+
+
+  // this.addEventListener('click', function(e){
+  //   console.log("scene");
+  //   console.log(e.eventPhase);
+  // })
+
+  // bmp.addEventListener('click', function(e){
+  //   console.log("bmp");
+  //   console.log(e.eventPhase);
+  // })
 }
 var p = Scene.prototype = Object.create(Container.prototype);

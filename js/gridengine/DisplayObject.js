@@ -5,7 +5,10 @@ function DisplayObject(){
 	Node.call(this);
 
 	this._stage = null;
+
 	this.visible = true;
+
+	this.mouseEnabled = true;
 
 	this.parent = null;
 
@@ -28,6 +31,7 @@ function DisplayObject(){
 	this._anchorY = 0;
 
 	this.alpha = 1;
+
 
 	// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
 	this.dirtyMatrix = true;

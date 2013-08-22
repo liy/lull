@@ -107,7 +107,10 @@ p.getObjectUnder = function(x, y){
 	for(var i=len-1; i>=0; --i){
 		var child = this.getChildAt(i);
 
-		if(child instanceof Container){
+		if(!child.mouseEnabled || !child.visible)
+			continue;
+
+		if(child instanceof Container && !child.hitArea){
 			result = child.getObjectUnder(x, y);
 		}
 		else{

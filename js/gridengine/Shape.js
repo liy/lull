@@ -7,6 +7,11 @@ function Shape(){
 var p = Shape.prototype = Object.create(DisplayObject.prototype);
 
 p.draw = function(context){
+  if(!this.visible)
+    return;
+
+  DisplayObject.prototype.draw.call(this, context);
+
   // draw graphics
   this.graphics.draw(context);
 }

@@ -55,7 +55,7 @@ p.merge = function(childAABB, matrix){
 	// the Container's AABB will be set to dirty and the cache must be re-computed. That is to say, we only need to check whether
 	// Container AABB is dirty or not to decide to update the cache.
 	if(this.isDirty){
-		console.log('calculate bound cache');
+		// console.log('calculate bound cache');
 		var lowerBound = matrix.transformNew(childAABB.vertices[0]);
 		var upperBound = lowerBound;
 

@@ -6,17 +6,17 @@ function Container(){
 var p = Container.prototype = Object.create(DisplayObject.prototype)
 
 p.draw = function(context){
+	if(!this.visible)
+    return;
+
+  DisplayObject.prototype.draw.call(this, context);
+
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
-		if(this.visible){
-			this._children[i].updateContext(context);
-			this._children[i].draw(context);
-			this._children[i].postDraw(context);
-		}
+		this._children[i].updateContext(context);
+		this._children[i].draw(context);
+		this._children[i].postDraw(context);
 	}
-
-	if(this.onDraw)
-		this.onDraw(context);
 };
 
 Object.defineProperty(p, "numChildren", {
@@ -111,7 +111,7 @@ p.getObjectUnder = function(x, y){
 
 		if(child instanceof Container && !child.hitArea){
 			var result = child.getObjectUnder(x, y);
-			if(result) 
+			if(result)
 				return result;
 		}
 		else{

@@ -35,9 +35,6 @@ function DisplayObject(){
 
 	// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
 	this.dirtyMatrix = true;
-
-	// callback function after DisplayObject context drawing process finished.
-	this.onDraw = null;
 }
 var p = DisplayObject.prototype = Object.create(Node.prototype);
 
@@ -79,7 +76,7 @@ p.updateContext = function(context){
 }
 
 p.draw = function(context){
-	// needs implementation
+	this.dispatchEvent(Event.enterframe);
 };
 
 p.postDraw = function(context){

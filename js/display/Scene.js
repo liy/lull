@@ -15,13 +15,28 @@ var p = Scene.prototype = Object.create(Container.prototype);
 
 p.onClick = function(e){
   console.log(e.currentTarget.width);
-  this.onDraw = this.zoomIn;
+
+  this._zoomInClosure = this.addEventListener('enterframe', bind(this, this.zoomIn));
 }
 
 p.zoomIn = function(){
+  var tw = 800*0.8;
+  var th = 600*0.8;
+
   // console.log('zoom in');
-  var dw = (1024*0.8 - this.width)/20;
-  var dh = (768*0.8 - this.height)/20;
-  this.width += dw/5;
-  this.height += dh/5;
+  var dw = (tw - this.width)/10;
+  var dh = (th - this.height)/10;
+  var w = this.width += dw;
+  var h = this.height += dh;
+
+  this.x = (800 - w)/2;
+  this.y = (600 - h)/2;
+
+  if(dw < 0.01 && dh < 0.01){
+    this.width = tw;
+    this.height = th;
+
+    console.log('remove');
+    this.removeEventListener('enterframe', this._zoomInClosure);
+  }
 }

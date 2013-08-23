@@ -5,7 +5,7 @@ function EventDispatcher(){
 
   // Storing the **target phase** and bubble phase listeners.
   // Type as key, the actual listener function as the value.
-  // 
+  //
   // Note that the target phase listener is stored here.
   this._targetBubbles = Object.create(null);
 }
@@ -15,24 +15,42 @@ var p = EventDispatcher.prototype;
  * [addEventListener description]
  * @param {[type]} type       [description]
  * @param {[type]} listener   [description]
- * @param {Boolean} useCapture Use capture phase. Note that if you set useCapture to true and add a listener to the source(target) event dispatcher, 
- *                            listener will not triggered. The capture phase stops before the target. You should use non-capture phase listener. 
- *                            e.g., A Container contains a Bitmap, adding listener to the Bitmap and set useCapture to true will not get triggered. 
+ * @param {Boolean} useCapture Use capture phase. Note that if you set useCapture to true and add a listener to the source(target) event dispatcher,
+ *                            listener will not triggered. The capture phase stops before the target. You should use non-capture phase listener.
+ *                            e.g., A Container contains a Bitmap, adding listener to the Bitmap and set useCapture to true will not get triggered.
  *                            Instead, you can disable useCapture, or add listener to the Container and use capture phase.
  */
 p.addEventListener = function(type, listener, useCapture){
   var listeners;
   if(useCapture){
-    if(!this._captures[type]) 
+    if(!this._captures[type])
       this._captures[type] = [];
     listeners = this._captures[type];
   }
   else{
-    if(!this._targetBubbles[type]) 
+    if(!this._targetBubbles[type])
       this._targetBubbles[type] = [];
     listeners = this._targetBubbles[type];
   }
   listeners.push(listener);
+
+  return listener;
+}
+
+p.hasEventListener = function(type){
+  return this._targetBubbles[type] || this._captures[type];
+}
+
+p.removeEventListener = function(type, listener, useCapture){
+  var listeners = useCapture ? this._captures[type] : this._targetBubbles[type];
+  var len = listeners.length;
+  var index = listeners.indexOf(listener);
+  if(index !== -1){
+    if(len === 1)
+      listeners.length = 0;
+    else
+      listeners.splice(index, 1);
+  }
 }
 
 p.dispatchEvent = function(e){
@@ -79,7 +97,7 @@ p.dispatchEvent = function(e){
       listeners[j](e);
     }
   }
-  
+
   // bubble phase
   for(i=1; i<len && !e._propagationStopped && e.bubbles; ++i){
     e.eventPhase = 3;

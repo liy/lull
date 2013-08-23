@@ -21,9 +21,10 @@ function Event(type, bubbles){
 var p = Event.prototype = Object.create(null);
 
 Event.COMPLETE = 'complete';
+Event.enterframe = new Event('enterframe');
 
 /**
- * Prevents all other event listeners from being triggered for this event dispatch, including any remaining candidate event listeners. 
+ * Prevents all other event listeners from being triggered for this event dispatch, including any remaining candidate event listeners.
  * Once it has been called, further calls to this method have no additional effect.
  */
 p.stopImmediatePropagation = function(){
@@ -31,7 +32,7 @@ p.stopImmediatePropagation = function(){
 }
 
 /**
- * Prevents all other event listeners from being triggered, excluding any remaining candidate event listeners. 
+ * Prevents all other event listeners from being triggered, excluding any remaining candidate event listeners.
  * Once it has been called, further calls to this method have no additional effect.
  */
 p.stopPropagation = function(){

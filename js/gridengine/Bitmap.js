@@ -42,12 +42,12 @@ p.updateContext = function(context){
 }
 
 p.draw = function(context){
-	if(this.image == null || !this.image.complete)
+	if(!this.visible || this.image == null || !this.image.complete)
 		return;
 
-  context.drawImage(this.image, 0, 0);
+	DisplayObject.prototype.draw.call(this, context);
 
-  if(this.onDraw) this.onDraw(context);
+  context.drawImage(this.image, 0, 0);
 };
 
 p.postDraw = function(context){

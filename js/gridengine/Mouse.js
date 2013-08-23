@@ -12,7 +12,7 @@ function Mouse(renderer){
   // renderer.canvas.addEventListener('click', bind(this, this.handler), false);
   // renderer.canvas.addEventListener('mousemove', bind(this, this.handler), false);
   renderer.canvas.addEventListener('mousedown', bind(this, this.handler), false);
-  renderer.canvas.addEventListener('mouseup', bind(this, this.handler), false);
+  // renderer.canvas.addEventListener('mouseup', bind(this, this.handler), false);
 }
 var p = Mouse.prototype = Object.create(null);
 
@@ -46,11 +46,15 @@ p._updatePostion = function(e){
 
 p.handler = function(e){
   this._updatePostion(e);
-  
+
   var target = this.renderer.stage.getObjectUnder(this.position.x, this.position.y);
+
+  // console.log(target);
 
   if(target){
     var local = target.globalToLocal(this.position);
+
+    console.log('mouse action!');
 
     // click event
     if(e.type === 'mouseup' && this.target === target)

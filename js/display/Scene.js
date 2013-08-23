@@ -3,60 +3,16 @@
 function Scene(w, h){
   Container.call(this);
 
-  var shape = new Shape();
-  this.addChild(shape);
+  var background = new Shape();
+  background.graphics.beginFill('#FFF', 1);
+  background.graphics.drawRect(0,0,w,h);
+  background.graphics.endFill();
+  this.addChild(background);
 
-  shape.graphics.beginFill('#118822', 1);
-  shape.graphics.drawRect(0, 0, w, h);
-  shape.graphics.endFill();
-  shape.x = 20;
-
-
-  var tx = 0;
-  var ty = 0;
-  var alpha = 0.2;
-  var radian = 0;
-  // for(var i=0; i<10; ++i){
-    var bmp = new Bitmap();
-    bmp.load('somacruz.png');
-    this.addChild(bmp);
-    // bmp.name = i;
-    bmp.x = tx;
-    bmp.y = ty;
-    bmp.radian = radian
-    bmp.alpha = alpha;
-    tx += 30;
-    ty += 40;
-    alpha /= 0.8;
-    radian += 0.04;
-
-    bmp.addEventListener('click', function(e){
-      console.log("bmp");
-      // console.log(e.target.name);
-    })
-
-    this.hitArea = shape;
-  // }
-  
-  // bmp.hitArea = 
-
-  // this.addEventListener('click', function(e){
-  //   console.log(e.eventPhase);
-  // })
-
-  // bmp.addEventListener('click', function(e){
-  //   console.log(e.eventPhase);
-  // })
-
-
-
-
-
-  this.addEventListener('click', function(e){
-    console.log("scene");
-    console.log(e.eventPhase);
-  })
-
-  
+  this.addEventListener('click', this.onClick);
 }
 var p = Scene.prototype = Object.create(Container.prototype);
+
+p.onClick = function(e){
+  console.log(e.target);
+}

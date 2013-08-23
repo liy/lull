@@ -16,12 +16,20 @@ HitTest.process = function(displayObject, x, y){
     m.multiplyRight(testTarget.matrix);
   }
 
+  // console.log(m.tx-x, m.ty-y);
+
   HitTest.context.setTransform(m.a, m.b, m.c, m.d, m.tx-x, m.ty-y);
   // draw the pixel that needs testing.
   testTarget.draw(HitTest.context);
 
   // Get the alpha from the testing pixel, If it is none 0, it's a hit
   var hit = HitTest.context.getImageData(0, 0, 1, 1).data[3] > 0;
+
+  if(hit){
+    console.log(hit);
+    console.log(HitTest.context.getImageData(0, 0, 1, 1).data);
+  }
+  
 
   // reset and clear the 1 pixel context.
   HitTest.context.setTransform(1, 0, 0, 1, 0, 0);

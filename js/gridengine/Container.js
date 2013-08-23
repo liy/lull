@@ -112,6 +112,8 @@ p.getObjectUnder = function(x, y){
 
 		if(child instanceof Container && !child.hitArea){
 			result = child.getObjectUnder(x, y);
+			if(result) 
+				return result;
 		}
 		else{
 			// hit

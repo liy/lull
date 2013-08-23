@@ -9,7 +9,7 @@ function Scene(w, h){
   background.graphics.endFill();
   this.addChild(background);
 
-  this.addEventListener('click', this.onClick);
+  this.addEventListener('mouseup', this.onClick);
 }
 var p = Scene.prototype = Object.create(Container.prototype);
 

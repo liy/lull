@@ -102,7 +102,6 @@ p.getAABB = function(){
  * @return {[type]}   The hit DisplayObject
  */
 p.getObjectUnder = function(x, y){
-	var result = null;
 	var len = this.numChildren;
 	for(var i=len-1; i>=0; --i){
 		var child = this.getChildAt(i);
@@ -111,7 +110,7 @@ p.getObjectUnder = function(x, y){
 			continue;
 
 		if(child instanceof Container && !child.hitArea){
-			result = child.getObjectUnder(x, y);
+			var result = child.getObjectUnder(x, y);
 			if(result) 
 				return result;
 		}
@@ -121,6 +120,4 @@ p.getObjectUnder = function(x, y){
 				return child;
 		}
 	}
-
-	return result;
 }

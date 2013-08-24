@@ -1,8 +1,10 @@
 function Mouse(renderer){
   this.renderer = renderer;
 
-  // mouse position vector.
+  // mouse position, screen coordinate.
   this.position = new Vec2();
+
+  this._worldPosition = new Vec2();
 
   this._mouseDownTarget = null;
   this._mouseUpTarget = null;
@@ -15,6 +17,20 @@ function Mouse(renderer){
   renderer.canvas.addEventListener('mouseup', bind(this, this.upHandler), false);
 }
 var p = Mouse.prototype = Object.create(null);
+
+/**
+ * Get the corresponding world coordinate using camera's view matrix.
+ * @param  {[type]} camera Optional, if not supplied, use default stage camera.
+ * @return {[type]}        mouse's world coordinate.
+ */
+p.getWorldPosition = function(camera){
+  camera = camera || this.renderer.stage.camera;
+  this._worldPosition.x = this.position.x;
+  this._worldPosition.y = this.position.y;
+  if(camera)
+    camera.matrix.invert().transform(this._worldPosition);
+  return this._worldPosition;
+}
 
 /**
  * mousedown  MouseEvent  DOM L3  A pointing device button (usually a mouse) is pressed on an element.
@@ -50,6 +66,9 @@ p._updatePostion = function(e){
  */
 p.downHandler = function(e){
   this._updatePostion(e);
+
+  // console.log(this.position.toString());
+
   this.target = this.renderer.stage.getObjectUnder(this.position.x, this.position.y);
 
   if(this.target){

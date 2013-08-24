@@ -123,7 +123,7 @@ Object.defineProperty(p, "height", {
 		return this._originalHeight * this._scaleY;
 	},
 	set: function(height){
-		this._scaley = height/this._originalHeight;
+		this._scaleY = height/this._originalHeight;
 		this.dirtyMatrix = true;
 	}
 });

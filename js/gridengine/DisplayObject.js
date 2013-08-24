@@ -245,6 +245,7 @@ p.localToGlobal = function(v){
 	return this.concatedMatrix.transform(v);
 };
 
+// TODO: make it normal method
 Object.defineProperty(p, "stage", {
 	get: function(){
 		return this._stage;

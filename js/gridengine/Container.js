@@ -35,6 +35,8 @@ p.addChild = function(displayObject){
 	displayObject.parent = this;
 	this._children.push(displayObject);
 
+	displayObject.stage = this.stage;
+
 	this.dirtyAABB = true;
 };
 
@@ -55,7 +57,7 @@ p.removeChildAt = function(index){
 	removed.parent = null;
 
 	// it is now off the stage.
-	removed.setStage(null);
+	removed.stage = null;
 
 	return removed;
 };
@@ -71,7 +73,11 @@ p.contains = function(displayObject){
 	return this._children.indexOf(displayObject) != -1;
 };
 
+// TODO: make it normal method
 Object.defineProperty(p, "stage", {
+	get: function(){
+		return this._stage;
+	},
 	// private method, internal use only
 	// When the DisplayObject is removed from the display list, its stage will be nulled.
 	// All its children's stage will be nulled.

@@ -9,14 +9,16 @@ HitTest.process = function(displayObject, x, y){
   // And then, simply do a inverse of the mouse position to locate the correct pixel.
   var m = displayObject.concatedMatrix;
 
+  // TODO: camera transform.
+  if(displayObject.stage && displayObject.stage.camera)
+    m = displayObject.stage.camera.matrix.multiplyRight(m);
+
   // if hitArea is defined, use hitArea as test target. Also update the matrix.
   var testTarget = displayObject;
   if(displayObject.hitArea){
     testTarget = displayObject.hitArea;
     m.multiplyRight(testTarget.matrix);
   }
-
-  // console.log(m.tx-x, m.ty-y);
 
   HitTest.context.setTransform(m.a, m.b, m.c, m.d, m.tx-x, m.ty-y);
   // draw the pixel that needs testing.

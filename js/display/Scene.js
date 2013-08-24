@@ -20,9 +20,9 @@ function Scene(w, h){
 var p = Scene.prototype = Object.create(Container.prototype);
 
 p.onClick = function(e){
-  console.log(e.currentTarget.width);
+  // console.log(this.x, this.y);
 
-  this.zoomIn = this.addEventListener('enterframe', bind(this, this.zoomIn));
+  // this.zoomIn = this.addEventListener('enterframe', bind(this, this.zoomIn));
 }
 
 p.zoomIn = function(){

@@ -6,7 +6,7 @@ function Activity(stage){
 
   stage.addChild(this);
 
-  this.availableSlots = 2;
+  this.availableSlots = 1;
 
   this.scenes = [];
   this.slots = new Array(this.availableSlots);
@@ -46,8 +46,8 @@ p.onComplete = function(){
   for(var i=0; i<this.slots.length; ++i){
     this.scenes[i] = new Scene(this.slots[i].width, this.slots[i].height);
     this.addChild(this.scenes[i]);
-    this.scenes[i].x = this.slots[i].x;
-    this.scenes[i].y = this.slots[i].y;
+    // this.scenes[i].x = this.slots[i].x;
+    // this.scenes[i].y = this.slots[i].y;
   }
 }
 

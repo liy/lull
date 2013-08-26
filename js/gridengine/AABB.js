@@ -4,6 +4,10 @@ function AABB(){
 
 	// These 2 variables are used for caching the lower and upper bounds for merging with the parent DisplayObject's AABB and matrix. Only when this AABB is dirty,
 	// or these two variables are null, they will be re-computed.
+	//
+	// Whenever thi
+	// this.lowerBoundForMerge = this.lowerBound;
+	// this.upperBoundForMerge = this.upperBound;
 	this.lowerBoundForMerge = new Vec2(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
 	this.upperBoundForMerge = new Vec2(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
 
@@ -74,10 +78,10 @@ p.merge = function(childAABB, matrix){
 
 	// The vertices will be updated to match with the upper and lower bounds. Then, if the DisplayObject's Container can
 	// use the vertices information to compute its own AABB.
-	this.vertices[0].set(this.lowerBound.x, this.lowerBound.y);
-	this.vertices[1].set(this.lowerBound.x, this.upperBound.y);
-	this.vertices[2].set(this.upperBound.x, this.upperBound.y);
-	this.vertices[3].set(this.upperBound.x, this.lowerBound.y);
+	this.vertices[0].setValues(this.lowerBound.x, this.lowerBound.y);
+	this.vertices[1].setValues(this.lowerBound.x, this.upperBound.y);
+	this.vertices[2].setValues(this.upperBound.x, this.upperBound.y);
+	this.vertices[3].setValues(this.upperBound.x, this.lowerBound.y);
 };
 
 /*

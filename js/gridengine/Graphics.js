@@ -101,9 +101,12 @@ p.updateAABB = function(aabb){
       upperBound = Vec2.max(upperBound, this.vertices[i]);
     }
 
-    aabb.vertices[0].set(lowerBound.x, lowerBound.y);
-    aabb.vertices[1].set(lowerBound.x, upperBound.y);
-    aabb.vertices[2].set(upperBound.x, upperBound.y);
-    aabb.vertices[3].set(upperBound.x, lowerBound.y);
+    aabb.lowerBound.setValue(lowerBound);
+    aabb.upperBound.setValue(upperBound);
+
+    aabb.vertices[0].setValues(lowerBound.x, lowerBound.y);
+    aabb.vertices[1].setValues(lowerBound.x, upperBound.y);
+    aabb.vertices[2].setValues(upperBound.x, upperBound.y);
+    aabb.vertices[3].setValues(upperBound.x, lowerBound.y);
   }
 }

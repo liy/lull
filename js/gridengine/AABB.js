@@ -4,10 +4,8 @@ function AABB(){
 
 	// These 2 variables are used for caching the lower and upper bounds for merging with the parent DisplayObject's AABB and matrix. Only when this AABB is dirty,
 	// or these two variables are null, they will be re-computed.
-	//
-	// Whenever thi
-	this.lowerBoundForMerge = this.lowerBound;
-	this.upperBoundForMerge = this.upperBound;
+	this.lowerBoundForMerge = new Vec2(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+	this.upperBoundForMerge = new Vec2(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
 
 	// ccw vertices arrangement
 		// 0------3
@@ -28,8 +26,8 @@ p.reset = function(){
 	this.vertices[2].zero();
 	this.vertices[3].zero();
 
-	this.lowerBound.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-	this.upperBound.set(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
+	this.lowerBound.setValues(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+	this.upperBound.setValues(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
 };
 
 /*
@@ -64,15 +62,15 @@ p.merge = function(childAABB, matrix){
 			lowerBound = Vec2.min(lowerBound, v);
 			upperBound = Vec2.max(upperBound, v);
 		}
-		childAABB.lowerBoundForMerge = lowerBound;
-		childAABB.upperBoundForMerge = upperBound;
+		childAABB.lowerBoundForMerge.setValue(lowerBound);
+		childAABB.upperBoundForMerge.setValue(upperBound);
 
 		this.isDirty = false;
 	}
 
 	// We only need to compare the cached bounds with the Container's corresponding bounds to calculate the new bounds.
-	this.lowerBound = Vec2.min(this.lowerBound, childAABB.lowerBoundForMerge);
-	this.upperBound = Vec2.max(this.upperBound, childAABB.upperBoundForMerge);
+	this.lowerBound.setValue(Vec2.min(this.lowerBound, childAABB.lowerBoundForMerge));
+	this.upperBound.setValue(Vec2.max(this.upperBound, childAABB.upperBoundForMerge));
 
 	// The vertices will be updated to match with the upper and lower bounds. Then, if the DisplayObject's Container can
 	// use the vertices information to compute its own AABB.
@@ -138,8 +136,12 @@ p.set = function(x, y, w, h){
 		// 0------3
 		// |      |
 		// 1------2
-	this.vertices[0].set(this.lowerBound.x, this.lowerBound.y);
-	this.vertices[1].set(this.lowerBound.x, this.upperBound.y);
-	this.vertices[2].set(this.upperBound.x, this.upperBound.y);
-	this.vertices[3].set(this.upperBound.x, this.lowerBound.y);
+	this.vertices[0].setValues(this.lowerBound.x, this.lowerBound.y);
+	this.vertices[1].setValues(this.lowerBound.x, this.upperBound.y);
+	this.vertices[2].setValues(this.upperBound.x, this.upperBound.y);
+	this.vertices[3].setValues(this.upperBound.x, this.lowerBound.y);
+}
+
+p.toString = function(){
+	return '['+this.lowerBound.x + ', ' + this.lowerBound.y + ', ' + this.upperBound.x + ', ' + this.upperBound.y+']'
 }

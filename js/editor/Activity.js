@@ -11,7 +11,7 @@ function Activity(stage){
 
   this.availableSlots = 20;
 
-  this.scenes = [];
+  this.thumbnails = [];
   this.slots = new Array(this.availableSlots);
 
   this.selectedScene = null;
@@ -49,14 +49,15 @@ p.initTemplate = function(){
 }
 
 p.onComplete = function(){
-  this.scenes.length = 0;
+  this.thumbnails.length = 0;
   for(var i=0; i<this.slots.length; ++i){
-    this.scenes[i] = new Scene(this.slots[i].width, this.slots[i].height);
-    this.addChild(this.scenes[i]);
-    this.scenes[i].x = this.slots[i].x;
-    this.scenes[i].y = this.slots[i].y;
+    this.thumbnails[i] = new SceneThumbnail(this.slots[i].width, this.slots[i].height);
+    this.addChild(this.thumbnails[i]);
+    this.thumbnails[i].x = this.slots[i].x;
+    this.thumbnails[i].y = this.slots[i].y;
+    this.thumbnails[i].load('http://placekitten.com/400/300');
 
-    this.scenes[i].addEventListener('click', bind(this, this.onSceneClick));
+    this.thumbnails[i].addEventListener('click', bind(this, this.onSceneClick));
   }
 }
 
@@ -83,14 +84,13 @@ p.onSceneClick = function(e){
     this.zoomedIn = true;
   }
 
-
   // fade out other scenes
-  for(var i=0; i<this.scenes.length; ++i){
-        this.scenes[i].visible = true;
-    if(this.scenes[i] !== this.selectedScene){
+  for(var i=0; i<this.thumbnails.length; ++i){
+        this.thumbnails[i].visible = true;
+    if(this.thumbnails[i] !== this.selectedScene){
 
-      TweenLite.to(this.scenes[i], 0.5, {alpha: alpha, onComplete: function(){
-        this.target.visible = (alpha === 0) ? false : true;
+      TweenLite.to(this.thumbnails[i], 0.5, {alpha: alpha, onComplete: function(){
+        // this.target.visible = (alpha === 0) ? false : true;
       }});
     }
 

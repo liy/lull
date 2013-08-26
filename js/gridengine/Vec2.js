@@ -14,10 +14,15 @@ function Vec2(x, y){
 }
 var p = Vec2.prototype;
 
+p.setValue = function(v){
+	this.x = v.x;
+	this.y = v.y;
+}
+
 /*
 Set the position of the Vector
 */
-p.set = function(x, y){
+p.setValues = function(x, y){
 	this.x = x;
 	this.y = y;
 };

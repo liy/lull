@@ -28,7 +28,7 @@ p.onload = function(){
 	this.getAABB();
 	this.dirtyAABB = true;
 
-	// this.dispatchEvent(new Event(Event.COMPLETE));
+	this.dispatchEvent(new Event(Event.COMPLETE));
 };
 
 p.updateContext = function(context){
@@ -95,7 +95,9 @@ Object.defineProperty(p, "height", {
 });
 
 p.getAABB = function(){
-	this._aabb.set(this.x, this.y, this.image.width, this.image.height);
-
+	if(this.image)
+		this._aabb.set(this.x, this.y, this.image.width, this.image.height);
+	else
+		this._aabb.set(this.x, this.y, 0, 0);
 	return this._aabb;
 }

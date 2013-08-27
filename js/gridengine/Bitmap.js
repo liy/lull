@@ -3,6 +3,8 @@ function Bitmap(){
 	DisplayObject.call(this);
 
 	this.image = null;
+
+	this.vertices = [];
 }
 var p = Bitmap.prototype = Object.create(DisplayObject.prototype);
 

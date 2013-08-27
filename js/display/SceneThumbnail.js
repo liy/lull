@@ -1,12 +1,12 @@
 function SceneThumbnail(w, h){
   Container.call(this);
 
-  this.background = new Shape();
-  this.background.graphics.beginFill('#000', 1);
-  this.background.graphics.drawRect(0,0,w,h);
-  this.background.graphics.beginFill('#FFF', 1);
-  this.background.graphics.drawRect(1,1,w-2,h-2);
-  this.background.graphics.endFill();
+  this.background = new Graphics();
+  this.background.beginFill('#000', 1);
+  this.background.drawRect(0,0,w,h);
+  this.background.beginFill('#FFF', 1);
+  this.background.drawRect(1,1,w-2,h-2);
+  this.background.endFill();
   this.addChild(this.background);
 
   this._bmp = new Bitmap();
@@ -27,7 +27,7 @@ p.load = function(uri){
 
 p.onComplete = function(e){
 
-  console.log(this.width);
+  // console.log(this.width);
 
   // console.log(this.width, this.height);
   // manually bubble up

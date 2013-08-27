@@ -16,7 +16,6 @@ function SceneThumbnail(w, h){
   this.onComplete = this._bmp.addEventListener(Event.COMPLETE, bind(this, this.onComplete));
   this.addChild(this._bmp);
 
-
   this._bmp.mouseEnabled = false;
 }
 var p = SceneThumbnail.prototype = Object.create(Container.prototype);

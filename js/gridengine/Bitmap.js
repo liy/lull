@@ -27,7 +27,7 @@ p.load = function(imageOrURL){
 
 p.onload = function(){
 	// update the AABB once for all!
-	this.getAABB();
+	this.computeAABB();
 	this.dirtyAABB = true;
 
 	this.dispatchEvent(new Event(Event.COMPLETE));
@@ -96,7 +96,7 @@ Object.defineProperty(p, "height", {
 	}
 });
 
-p.getAABB = function(){
+p.computeAABB = function(){
 	if(this.image)
 		this._aabb.set(this.x, this.y, this.image.width, this.image.height);
 	else

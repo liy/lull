@@ -1,3 +1,4 @@
+// TODO: needs clean up!!!!!!!!!
 function AABB(){
 	this.lowerBound = new Vec2(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
 	this.upperBound = new Vec2(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);

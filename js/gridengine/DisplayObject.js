@@ -20,8 +20,8 @@ function DisplayObject(){
 	this._scaleX = 1;
 	this._scaleY = 1;
 
-	// Do not use this._aabb directly, unless you know what you are doing. Use getAABB() instead.
-	// The getAABB() method is responsible for keeping AABB up to date, it will return you a correct AABB
+	// Do not use this._aabb directly, unless you know what you are doing. Use computeAABB() instead.
+	// The computeAABB() method is responsible for keeping AABB up to date, it will return you a correct AABB
 	this._aabb = new AABB();
 
 	// 2d affine transform matrix, internal use only.
@@ -294,20 +294,20 @@ Object.defineProperty(p, "scaleY", {
 /**
  * Keep AABB up to date
  */
-p.getAABB = function(){
+p.computeAABB = function(){
 	return this._aabb;
 }
 
 Object.defineProperty(p, "width", {
 	get: function(){
-		var aabb = this.getAABB();
+		var aabb = this.computeAABB();
 		if(aabb.width === Number.NEGATIVE_INFINITY)
 			return 0;
 		else
 			return aabb.width * this._scaleX;
 	},
 	set: function(v){
-		this._scaleX = v/this.getAABB().width;
+		this._scaleX = v/this.computeAABB().width;
 
 		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
@@ -316,14 +316,14 @@ Object.defineProperty(p, "width", {
 
 Object.defineProperty(p, "height", {
 	get: function(){
-		var aabb = this.getAABB();
+		var aabb = this.computeAABB();
 		if(aabb.height === Number.NEGATIVE_INFINITY)
 			return 0;
 		else
 			return aabb.height * this._scaleY;
 	},
 	set: function(v){
-		this._scaleY = v/this.getAABB().height;
+		this._scaleY = v/this.computeAABB().height;
 
 		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
@@ -339,7 +339,7 @@ p.getBounds = function(targetCoordinateSpace){
 		target = target.parent;
 	}
 
-	var aabb = this.getAABB().clone();
+	var aabb = this.computeAABB().clone();
 	if(m) aabb.transform(m);
 	return new Rect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 }

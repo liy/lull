@@ -94,7 +94,7 @@ p._endFill = function(){
 //   }
 // };
 
-p.getAABB = function(){
+p.computeAABB = function(){
   // reset AABB so it is ready for perform merging.
   this._aabb.reset();
 

@@ -89,13 +89,13 @@ Object.defineProperty(p, "stage", {
 	}
 });
 
-p.getAABB = function(){
+p.computeAABB = function(){
 	// reset AABB so it is ready for perform merging.
 	this._aabb.reset();
 
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
-		this._aabb.merge(this._children[i].getAABB(), this._children[i].matrix);
+		this._aabb.merge(this._children[i].computeAABB(), this._children[i].matrix);
 	}
 
 	return this._aabb;

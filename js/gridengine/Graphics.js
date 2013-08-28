@@ -70,30 +70,6 @@ p._endFill = function(){
   this.closePath();
 }
 
-// Merge AABB with graphics' vertices.
-// p.merge = function(aabb){
-//   var lowerBound, upperBound;
-//   var len = this.vertices.length;
-
-//   if(len > 0){
-//     upperBound = lowerBound = this.vertices[0];
-
-//     for(var i=1; i<this.vertices.length; ++i){
-//       lowerBound = Vec2.min(lowerBound, this.vertices[i]);
-//       upperBound = Vec2.max(upperBound, this.vertices[i]);
-//     }
-
-
-//     aabb.lowerBound = Vec2.min(aabb.lowerBound, lowerBound);
-//     aabb.upperBound = Vec2.max(aabb.upperBound, upperBound);
-
-//     aabb.vertices[0].set(aabb.lowerBound.x, aabb.lowerBound.y);
-//     aabb.vertices[1].set(aabb.lowerBound.x, aabb.upperBound.y);
-//     aabb.vertices[2].set(aabb.upperBound.x, aabb.upperBound.y);
-//     aabb.vertices[3].set(aabb.upperBound.x, aabb.lowerBound.y);
-//   }
-// };
-
 p.computeAABB = function(){
   // reset AABB so it is ready for perform merging.
   this._aabb.reset();

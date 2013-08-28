@@ -98,8 +98,8 @@ Object.defineProperty(p, "height", {
 
 p.computeAABB = function(){
 	if(this.image)
-		this._aabb.set(this.x, this.y, this.image.width, this.image.height);
+		this._aabb.set(0, 0, this.image.width, this.image.height);
 	else
-		this._aabb.set(this.x, this.y, 0, 0);
+		this._aabb.set(0, 0, 0, 0);
 	return this._aabb;
 }

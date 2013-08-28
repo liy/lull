@@ -20,6 +20,8 @@ function DisplayObject(){
 	this._scaleX = 1;
 	this._scaleY = 1;
 
+	// AABB represents the bounding box without the DisplayObject's matrix been applied.
+	//
 	// Do not use this._aabb directly, unless you know what you are doing. Use computeAABB() instead.
 	// The computeAABB() method is responsible for keeping AABB up to date, it will return you a correct AABB
 	this._aabb = new AABB();

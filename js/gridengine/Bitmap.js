@@ -3,8 +3,9 @@ function Bitmap(){
 	DisplayObject.call(this);
 
 	this.image = null;
-
-	this.vertices = [];
+	for(var i=0; i<4; ++i){
+		this.vertices[i] = new Vec2();
+	}
 }
 var p = Bitmap.prototype = Object.create(DisplayObject.prototype);
 
@@ -26,9 +27,10 @@ p.load = function(imageOrURL){
 };
 
 p.onload = function(){
-	// update the AABB once for all!
-	this.computeAABB();
-	this.dirtyAABB = true;
+	this.vertices[0].zero();
+	this.vertices[1].setValues(0, this.image.height);
+	this.vertices[2].setValues(this.image.width, this.image.height);
+	this.vertices[3].setValues(this.image.width, 0);
 
 	this.dispatchEvent(new Event(Event.COMPLETE));
 };
@@ -67,15 +69,12 @@ Object.defineProperty(p, "complete", {
 Object.defineProperty(p, "width", {
 	// note that if you have to define getter and setter both of them at the same time for overriding!
 	get: function(){
-		if(this.image.width === Number.NEGATIVE_INFINITY)
-			return 0;
-		else
-			return this.image.width * this._scaleX;
+		this.computeAABB();
+		return this._aabb.width;
 	},
 	set: function(v){
 		this._scaleX = v/this.image.width;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
@@ -83,23 +82,12 @@ Object.defineProperty(p, "width", {
 Object.defineProperty(p, "height", {
 	// note that if you have to define getter and setter both of them at the same time for overriding!
 	get: function(){
-		if(this.image.height === Number.NEGATIVE_INFINITY)
-			return 0;
-		else
-			return this.image.height * this._scaleY;
+		this.computeAABB();
+		return this._aabb.width;
 	},
 	set: function(v){
 		this._scaleY = v/this.image.height;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
-
-p.computeAABB = function(){
-	if(this.image)
-		this._aabb.set(0, 0, this.image.width, this.image.height);
-	else
-		this._aabb.set(0, 0, 0, 0);
-	return this._aabb;
-}

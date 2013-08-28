@@ -89,17 +89,21 @@ Object.defineProperty(p, "stage", {
 	}
 });
 
-p.computeAABB = function(){
-	// reset AABB so it is ready for perform merging.
-	this._aabb.reset();
+p.getTransformedVertices = function(matrix){
+	this.vertices.length = 0;
+
+	var vertices = [];
 
 	var len = this._children.length;
 	for(var i=0; i<len; ++i){
-		this._aabb.merge(this._children[i].computeAABB(), this._children[i].matrix);
+		var child = this._children[i];
+		var m = matrix.clone().multiplyRight(child.matrix);
+		var tv = child.getTransformedVertices(m);
+		vertices = vertices.concat(tv);
 	}
 
-	return this._aabb;
-};
+	return vertices;
+}
 
 /**
  * [getObjectUnder description]

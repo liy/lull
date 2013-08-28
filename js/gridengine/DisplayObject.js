@@ -20,11 +20,11 @@ function DisplayObject(){
 	this._scaleX = 1;
 	this._scaleY = 1;
 
-	// AABB represents the bounding box without the DisplayObject's matrix been applied.
-	//
-	// Do not use this._aabb directly, unless you know what you are doing. Use computeAABB() instead.
-	// The computeAABB() method is responsible for keeping AABB up to date, it will return you a correct AABB
 	this._aabb = new AABB();
+	// 0------3
+	// |      |
+	// 1------2
+	this.vertices = [];
 
 	// 2d affine transform matrix, internal use only.
 	this._m = new Mat3();
@@ -132,7 +132,6 @@ Object.defineProperty(p, "matrix", {
 		this._y = this._m.ty - this._anchorY;
 
 		this.dirtyMatrix = true;
-		this.dirtyAABB = true;
 	}
 });
 
@@ -163,7 +162,6 @@ Object.defineProperty(p, "x", {
 	set: function(x){
 		this._x = x;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
@@ -175,7 +173,6 @@ Object.defineProperty(p, "y", {
 	set: function(y){
 		this._y = y;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
@@ -187,7 +184,6 @@ Object.defineProperty(p, "radian", {
 	set: function(radian){
 		this._radian = radian;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
@@ -273,7 +269,6 @@ Object.defineProperty(p, "scaleX", {
 	set: function(s){
 		this._scaleX = s;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
@@ -288,46 +283,55 @@ Object.defineProperty(p, "scaleY", {
 	set: function(s){
 		this._scaleY = s;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
 
-/**
- * Keep AABB up to date
- */
+p.getTransformedVertices = function(matrix){
+	var len = this.vertices.length;
+	var vs = new Array(len);
+	for(var i=0; i<len; ++i){
+		vs[i] = matrix.transformNew(this.vertices[i]);
+	}
+
+	return vs;
+}
+
 p.computeAABB = function(){
+	var tv = this.getTransformedVertices(this.matrix);
+
+	var lowerBound = tv[0];
+	var upperBound = lowerBound;
+
+	var len = tv.length;
+	for(var i=1; i<len; ++i){
+		lowerBound = Vec2.min(lowerBound, tv[i]);
+		upperBound = Vec2.max(upperBound, tv[i]);
+	}
+	this._aabb.lowerBound.setValue(lowerBound);
+	this._aabb.upperBound.setValue(upperBound);
+
 	return this._aabb;
 }
 
 Object.defineProperty(p, "width", {
 	get: function(){
-		var aabb = this.computeAABB();
-		if(aabb.width === Number.NEGATIVE_INFINITY)
-			return 0;
-		else
-			return aabb.width * this._scaleX;
+		return this.computeAABB().width;
 	},
 	set: function(v){
 		this._scaleX = v/this.computeAABB().width;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
 
 Object.defineProperty(p, "height", {
 	get: function(){
-		var aabb = this.computeAABB();
-		if(aabb.height === Number.NEGATIVE_INFINITY)
-			return 0;
-		else
-			return aabb.height * this._scaleY;
+		return this.computeAABB().height;
 	},
 	set: function(v){
 		this._scaleY = v/this.computeAABB().height;
 
-		this.dirtyAABB = true;
 		this.dirtyMatrix = true;
 	}
 });
@@ -341,23 +345,5 @@ p.getBounds = function(targetCoordinateSpace){
 		target = target.parent;
 	}
 
-	var aabb = this.computeAABB().clone();
-	if(m) aabb.transform(m);
-	return new Rect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+	return null;
 }
-
-/**
- * Cache the AABB. If AABB is not dirty, do not iterate through all vertices to get lower and upper bound, use cached instead.
- * Detail please refer to the AABB class.
- */
-Object.defineProperty(p, "dirtyAABB", {
-	get: function(){
-		return this._aabb.isDirty;
-	},
-	set: function(isDirty){
-		this._aabb.isDirty = isDirty;
-
-		if(isDirty && this.parent)
-			this.parent.dirtyAABB = true;
-	}
-});

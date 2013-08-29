@@ -298,15 +298,15 @@ p.getTransformedVertices = function(matrix){
 }
 
 p.computeAABB = function(){
-	var tv = this.getTransformedVertices(this.matrix);
+	var tfVertices = this.getTransformedVertices(this.matrix);
 
-	var lowerBound = tv[0];
+	var lowerBound = tfVertices[0];
 	var upperBound = lowerBound;
 
-	var len = tv.length;
+	var len = tfVertices.length;
 	for(var i=1; i<len; ++i){
-		lowerBound = Vec2.min(lowerBound, tv[i]);
-		upperBound = Vec2.max(upperBound, tv[i]);
+		lowerBound = Vec2.min(lowerBound, tfVertices[i]);
+		upperBound = Vec2.max(upperBound, tfVertices[i]);
 	}
 	this._aabb.lowerBound.setValue(lowerBound);
 	this._aabb.upperBound.setValue(upperBound);
@@ -337,13 +337,22 @@ Object.defineProperty(p, "height", {
 });
 
 p.getBounds = function(targetCoordinateSpace){
-	var m;
-	var target = this.parent;
-	while(target != targetCoordinateSpace && target != null){
-		m = target.matrix.clone();
-		m.multiplyLeft(target.matrix);
+	var m = new Mat3();
+	var target = this;
+	while(target != targetCoordinateSpace){
+		m = m.multiplyLeft(target.matrix);
 		target = target.parent;
 	}
 
-	return null;
+	var tfVertices = this.getTransformedVertices(m);
+	var lowerBound = tfVertices[0];
+	var upperBound = lowerBound;
+
+	var len = tfVertices.length;
+	for(var i=1; i<len; ++i){
+		lowerBound = Vec2.min(lowerBound, tfVertices[i]);
+		upperBound = Vec2.max(upperBound, tfVertices[i]);
+	}
+
+	return new Rect(lowerBound.x, lowerBound.y, upperBound.x - lowerBound.x, upperBound.y - lowerBound.y);
 }

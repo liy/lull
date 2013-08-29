@@ -12,10 +12,15 @@ var bmp = new Bitmap();
 bmp.load('somacruz.png');
 container.addChild(bmp);
 
+
 bmp.addEventListener(Event.COMPLETE, function(e){
-  console.log(container.width, container.height);
-  container.radian = Math.PI/4;
-  console.log(container.width, container.height);
+  // console.log(container.width, container.height);
+  // container.radian = Math.PI/4;
+  // console.log(container.width, container.height);
+
+  bmp.x = bmp.y = 0.5;
+  bmp.scaleX = bmp.scaleY = 0.5;
+  console.log(container.getBounds(container));
 })
 
 // var bmp = new Bitmap();

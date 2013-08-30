@@ -6,7 +6,7 @@ function Scene(w, h){
   var background = new Shape();
   background.graphics.beginFill('#000', 1);
   background.graphics.drawRect(0,0,w,h);
-  background.graphics.beginFill('#FFF', 1);
+  background.graphics.beginFill('#FF0000', 1);
   background.graphics.drawRect(1,1,w-2,h-2);
   background.graphics.endFill();
   this.addChild(background);

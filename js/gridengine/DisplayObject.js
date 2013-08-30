@@ -255,10 +255,6 @@ Object.defineProperty(p, "stage", {
 	}
 });
 
-
-
-
-
 /*
 X scale of the DisplayObject.
 */

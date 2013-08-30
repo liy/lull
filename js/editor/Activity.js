@@ -1,20 +1,21 @@
 function Activity(stage){
   Container.call(this);
 
+  // stage size
   this._width = 800;
   this._height = 600;
+  this._zoomScale = 0.8;
 
-  this._sceneZoomWidth = this._width * 0.8;
-  this._sceneZoomHeight = this._height * 0.8;
+  // contains all the thumbnails
+  this._thumbContainer = new Container();
+  this.addChild(this._thumbContainer);
+
+  // thumb slots
+  this._slots = new Array(20);
 
   stage.addChild(this);
 
-  this.availableSlots = 20;
-
-  this.thumbnails = [];
-  this.slots = new Array(this.availableSlots);
-
-  this.selectedScene = null;
+  this._selectedThumb = null;
 
   this.zoomedIn = false;
 
@@ -24,21 +25,24 @@ function Activity(stage){
 }
 var p = Activity.prototype = Object.create(Container.prototype);
 
+p.requestData = function(){
+
+}
+
 p.initTemplate = function(){
   var horizontalPadding = 10;
   var itemSpace = 10;
   var lineSpace = 10;
   var numColumns = 5;
-  var numRows = this.availableSlots/numColumns;
+  var numRows = this._slots.length/numColumns;
   var itemWidth = (this._width - (numColumns-1)*itemSpace - horizontalPadding*2)/numColumns;
   var itemHeight = 3/4 * itemWidth;
 
   var tx = horizontalPadding;
   var ty = (this._height - itemHeight*numRows - (numRows-1)*lineSpace)/2;
 
-  this.slots.length = 0;
-  for(var i=0; i<this.availableSlots; ++i){
-    this.slots[i] = new Rect(tx, ty, itemWidth, itemHeight);
+  for(var i=0; i<this._slots.length; ++i){
+    this._slots[i] = new Rect(tx, ty, itemWidth, itemHeight);
 
     tx += itemWidth + itemSpace;
     if((i+1)%numColumns == 0){
@@ -49,53 +53,39 @@ p.initTemplate = function(){
 }
 
 p.onComplete = function(){
-  this.thumbnails.length = 0;
-  for(var i=0; i<this.slots.length; ++i){
-    this.thumbnails[i] = new SceneThumbnail(this.slots[i].width, this.slots[i].height);
-    this.addChild(this.thumbnails[i]);
-    this.thumbnails[i].x = this.slots[i].x;
-    this.thumbnails[i].y = this.slots[i].y;
-    this.thumbnails[i].load('http://placekitten.com/400/300');
+  for(var i=0; i<this._slots.length; ++i){
+    var thumbnail = new SceneThumbnail(this._slots[i].width, this._slots[i].height);
+    this._thumbContainer.addChild(thumbnail);
+    thumbnail.x = this._slots[i].x;
+    thumbnail.y = this._slots[i].y;
+    thumbnail.load('http://placekitten.com/400/300');
 
-    this.thumbnails[i].addEventListener('click', bind(this, this.onSceneClick));
+    thumbnail.addEventListener('click', bind(this, this.onThumbClick));
   }
 }
 
-p.onSceneClick = function(e){
-  this.selectedScene = e.currentTarget;
+p.onThumbClick = function(e){
+  this._selectedThumb = e.currentTarget;
 
-  var sx, sy, tx, ty, alpha;
-  if(this.zoomedIn){
-    sx = sy = 1;
-    tx = ty = 0;
-    alpha = 1;
+  // zoom in
+  sx = this._width*this._zoomScale / this._selectedThumb.width;
+  sy = this._height*this._zoomScale / this._selectedThumb.height;
+  tx = -this._selectedThumb.x*sx + this._width*(1-this._zoomScale)*0.5;
+  ty = -this._selectedThumb.y*sy + this._height*(1-this._zoomScale)*0.5;
+  TweenLite.to(this._thumbContainer, 0.5, {scaleX: sx, scaleY: sy, x: tx, y: ty, ease:Power4.easeOut, onComplete: this.showScene});
+  // fade out unselected thumbnail
+  for(var i=0; i<this._thumbContainer.numChildren; ++i){
+    var thumb = this._thumbContainer.getChildAt(i);
+    thumb.visible = true;
+    if(thumb !== this._selectedThumb){
 
-    this.zoomedIn = false;
-  }
-  else{
-    sx = this._sceneZoomWidth / this.selectedScene.width;
-    sy = this._sceneZoomHeight / this.selectedScene.height;
-
-    tx = -this.selectedScene.x*sx + this._width*0.1;
-    ty = -this.selectedScene.y*sy + this._height*0.1;
-
-    alpha = 0;
-
-    this.zoomedIn = true;
-  }
-
-  // fade out other scenes
-  for(var i=0; i<this.thumbnails.length; ++i){
-        this.thumbnails[i].visible = true;
-    if(this.thumbnails[i] !== this.selectedScene){
-
-      TweenLite.to(this.thumbnails[i], 0.5, {alpha: alpha, onComplete: function(){
-        // this.target.visible = (alpha === 0) ? false : true;
+      TweenLite.to(thumb, 0.5, {alpha: 0, onComplete: function(){
+        this.target.visible = false;
       }});
     }
-
   }
+}
 
-  TweenLite.to(this, 0.5, {scaleX: sx, scaleY: sy, x: tx, y: ty, ease:Power4.easeOut});
+p.showScene = function(){
 
 }

@@ -69,31 +69,3 @@ p.endFill = function(){
 p._endFill = function(){
   this.closePath();
 }
-
-p.computeAABB = function(){
-  // reset AABB so it is ready for perform merging.
-  this._aabb.reset();
-
-  // directly update AABB using graphics information
-  var lowerBound, upperBound;
-  var len = this.vertices.length;
-
-  if(len > 0){
-    upperBound = lowerBound = this.vertices[0];
-
-    for(var i=1; i<this.vertices.length; ++i){
-      lowerBound = Vec2.min(lowerBound, this.vertices[i]);
-      upperBound = Vec2.max(upperBound, this.vertices[i]);
-    }
-
-    this._aabb.lowerBound.setValue(lowerBound);
-    this._aabb.upperBound.setValue(upperBound);
-
-    this._aabb.vertices[0].setValues(lowerBound.x, lowerBound.y);
-    this._aabb.vertices[1].setValues(lowerBound.x, upperBound.y);
-    this._aabb.vertices[2].setValues(upperBound.x, upperBound.y);
-    this._aabb.vertices[3].setValues(upperBound.x, lowerBound.y);
-  }
-
-  return this._aabb;
-};

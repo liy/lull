@@ -1,17 +1,22 @@
-var ServiceProvider = {
-  createActivity: function(data){
+// TODO: singleton
+function ServiceProvider(){
+  this.app = new WebService();
+}
+var p = ServiceProvider.prototype;
 
-  },
+p.createActivity = function(data){
+  var op = this.app.getOperation('activity', 'POST');
+  op.send
+}
 
-  getActivity: function(id){
+p.getActivity = function(id){
 
-  },
+}
 
-  saveActivity: function(){
+p.saveActivity = function(){
 
-  },
+}
 
-  autoSave: function(){
+p.autoSave = function(){
 
-  }
-};
+}

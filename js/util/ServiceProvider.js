@@ -13,7 +13,7 @@ ServiceProvider.getInstance = function(){
 
 p.login = function(un, ps){
   var op = this.loginService.getOperation('/user/login', 'POST');
-  op.requestData = JSON.stringify({username: un, password:md5(ps)});
+  op.requestText = JSON.stringify({username: un, password:md5(ps)});
 
   // better to tell server more information about the payload.
   op.xhr.setRequestHeader('Content-Type', 'application/json');
@@ -24,12 +24,12 @@ p.login = function(un, ps){
 
 p.getActivities = function(){
   var operation = this.cm3Service.getOperation("/user/"+UserProfile.currentProfile.sessionKey+"/activities", 'GET');
-  
+
   return operation;
 }
 
 p.createActivity = function(data){
-  
+
 }
 
 p.getActivity = function(id){

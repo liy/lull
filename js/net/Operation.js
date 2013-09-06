@@ -13,11 +13,14 @@ function Operation(endPoint, path, method){
 }
 var p = Operation.prototype = Object.create(EventDispatcher.prototype);
 
-p.send = function(data){
-  if(data) 
-    this.requestData = data;
+p.send = function(data, callback){
+  if(data)
+    this.requestText = data;
 
-  this.xhr.send(this.requestData);
+  if(callback)
+    this.callback = callback;
+
+  this.xhr.send(this.requestText);
 }
 
 p.onReadyStateChange = function(e){
@@ -28,10 +31,12 @@ p.onProgress = function(e){
 }
 
 p.onComplete = function(e){
-  this.responseData = e.target.responseText;
+  this.responseText = e.target.responseText;
 
   if(this.callback)
     this.callback();
+
+  // TODO: use status code to determine which event to dispatch
 
   this.dispatchEvent(new Event(Event.COMPLETE));
 }

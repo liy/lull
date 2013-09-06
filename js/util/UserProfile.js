@@ -1,7 +1,5 @@
 function UserProfile(){
   EventDispatcher.call(this);
-
-  this.sessionKey = null;
 }
 var p = UserProfile.prototype = Object.create(EventDispatcher.prototype);
 
@@ -15,15 +13,27 @@ p.login = function(un, ps){
   this.username = un;
   this.password = ps;
 
-  var op = ServiceProvider.getInstance().login(this.username, this.password);
-  op.addEventListener(Event.COMPLETE, bind(this, this.onComplete));
-  op.send();
+  if(!this.sessionKey){
+    var op = ServiceProvider.getInstance().login(this.username, this.password);
+    op.addEventListener(Event.COMPLETE, bind(this, this.onComplete));
+    op.send();
+  }
+  else{
+    this.dispatchEvent(new Event(Event.COMPLETE));
+  }
 }
 
 p.onComplete = function(e){
-  this.sessionKey = JSON.parse(e.target.responseData).sessionKey;
-
-  console.log(e.target.responseData);
+  this.sessionKey = JSON.parse(e.target.responseText).sessionKey;
 
   this.dispatchEvent(e);
 }
+
+Object.defineProperty(p, "sessionKey", {
+  get: function(){
+    return sessionStorage.sessionKey
+  },
+  set: function(v){
+    sessionStorage.sessionKey = v;
+  }
+});
